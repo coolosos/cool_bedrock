@@ -1,0 +1,16 @@
+name: cool_bedrock
+description: A bedrock package providing the blueprints and abstract definitions necessary to build a scalable and maintainable Dart/Flutter application.
+version: 1.0.0
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  fpdart: ^1.2.0
+  equatable: ^2.0.7
+  meta: ^1.17.0
+  rxdart: ^0.28.0
+
+dev_dependencies:
+  coolint: 2.1.2
+  test: ^1.28.0
