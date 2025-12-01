@@ -49,14 +49,11 @@ final class InvalidUsecaseTransformationFailure
   const InvalidUsecaseTransformationFailure();
 }
 
-final class UsecaseTestHandler
-    extends
-        UseCaseHandler<
-          UsecaseTestHandlerEntity,
-          UsecaseTestHandlerParams,
-          UsecaseTestHandlerFailure,
-          UsecaseTestHandlerEntity
-        > {
+final class UsecaseTestHandler extends UseCaseHandler<
+    UsecaseTestHandlerEntity,
+    UsecaseTestHandlerParams,
+    UsecaseTestHandlerFailure,
+    UsecaseTestHandlerEntity> {
   const UsecaseTestHandler({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerEntity>> Function() repository;

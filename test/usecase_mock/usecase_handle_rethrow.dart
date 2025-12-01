@@ -40,18 +40,15 @@ final class InvalidUsecaseTestHandlerRethrowFailure
   const InvalidUsecaseTestHandlerRethrowFailure();
 }
 
-final class UsecaseTestHandlerRethrow
-    extends
-        UseCaseHandler<
-          UsecaseTestHandlerRethrowEntity,
-          UsecaseTestHandlerRethrowParams,
-          UsecaseTestHandlerRethrowFailure,
-          UsecaseTestHandlerRethrowEntity
-        > {
+final class UsecaseTestHandlerRethrow extends UseCaseHandler<
+    UsecaseTestHandlerRethrowEntity,
+    UsecaseTestHandlerRethrowParams,
+    UsecaseTestHandlerRethrowFailure,
+    UsecaseTestHandlerRethrowEntity> {
   const UsecaseTestHandlerRethrow({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerRethrowEntity>> Function()
-  repository;
+      repository;
   @override
   InvalidUsecaseTestHandlerRethrowParamsFailure onInvalidParams() {
     return const InvalidUsecaseTestHandlerRethrowParamsFailure();
@@ -94,18 +91,15 @@ final class UsecaseTestHandlerRethrow
   }
 }
 
-final class UsecaseTestHandlerOnLeft
-    extends
-        UseCaseHandler<
-          UsecaseTestHandlerRethrowEntity,
-          UsecaseTestHandlerRethrowParams,
-          UsecaseTestHandlerRethrowFailure,
-          UsecaseTestHandlerRethrowEntity
-        > {
+final class UsecaseTestHandlerOnLeft extends UseCaseHandler<
+    UsecaseTestHandlerRethrowEntity,
+    UsecaseTestHandlerRethrowParams,
+    UsecaseTestHandlerRethrowFailure,
+    UsecaseTestHandlerRethrowEntity> {
   const UsecaseTestHandlerOnLeft({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerRethrowEntity>> Function()
-  repository;
+      repository;
   @override
   InvalidUsecaseTestHandlerRethrowParamsFailure onInvalidParams() {
     return const InvalidUsecaseTestHandlerRethrowParamsFailure();

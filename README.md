@@ -15,12 +15,12 @@ A bedrock package providing the blueprints and abstract definitions necessary to
 
 ## ✨ Features
 
-* 🏛️ Formalized Architecture: Strict base contracts for all layers: Entity, Params, AppService, and Codable.
-* 🎯 Domain Logic (Use Cases): Typified UseCase hierarchy for commands and queries, including assisted flow management (UseCaseHandler).
-* 🛡️ Functional Error Handling: Leverages the functional types Either<Failure, T> and Option<T> for explicit, predictable, and boilerplate-reducing error flow.
-* 🛑 Typed Errors: Coherent error structure using sealed base classes: Issue, Failure (business logic), RepositoryError, and DataSourceException (technical/infrastructure).
-* 🔄 Reactive Services: Base classes for creating services that manage state using BehaviorSubject, PublishSubject, and periodic execution logic (Timer).
-* 🧪 Immutability & Testability: All core domain structures (Entity, Params) are immutable and comparable (Equatable).
+- 🏛️ Formalized Architecture: Strict base contracts for all layers: Entity, Params, AppService, and Codable.
+- 🎯 Domain Logic (Use Cases): Typified UseCase hierarchy for commands and queries, including assisted flow management (UseCaseHandler).
+- 🛡️ Functional Error Handling: Leverages the functional types Either<Failure, T> and Option<T> for explicit, predictable, and boilerplate-reducing error flow.
+- 🛑 Typed Errors: Coherent error structure using sealed base classes: Issue, Failure (business logic), RepositoryError, and DataSourceException (technical/infrastructure).
+- 🔄 Reactive Services: Base classes for creating services that manage state using BehaviorSubject, PublishSubject, and periodic execution logic (Timer).
+- 🧪 Immutability & Testability: All core domain structures (Entity, Params) are immutable and comparable (Equatable).
 
 ## 🚀 Installation
 
@@ -46,6 +46,7 @@ import 'package:cool_bedrock/cool_bedrock.dart';
 ```
 
 ### 1. Creating the Use Case
+
 This example demonstrates how to implement a UseCase, defining its specific Failure and parameter validation:
 
 ```dart
@@ -81,6 +82,7 @@ final class FetchUserUseCase
 ```
 
 ### 2. Execution and Error Handling
+
 ```dart
 // Execution with valid parameters
 final validParams = const FetchUserParams('user_123');
@@ -88,15 +90,15 @@ final validResult = await fetchUserUsecase.call(validParams);
 
 validResult.fold(
   // LEFT side (Failure)
-  (failure) => print('Error: ${failure.message}'), 
+  (failure) => print('Error: ${failure.message}'),
   // RIGHT side (Success)
   (user) => print('Fetched User: ${user.name}'),
 );
 
 ```
 
-
 ## 💡 Reactive Services Example
+
 The base services provide lifecycle control and reactivity. Here's a service that periodically updates a counter:
 
 ```dart
@@ -105,7 +107,7 @@ import 'dart:async';
 
 final class HeartbeatService extends TimerAndBehaviorService<int> {
   HeartbeatService()
-      : super(periodicDuration: const Duration(seconds: 10)); 
+      : super(periodicDuration: const Duration(seconds: 10));
 
   int _counter = 0;
 
@@ -123,19 +125,18 @@ final class HeartbeatService extends TimerAndBehaviorService<int> {
 ```
 
 ## 📚 API Reference
+
 Check the full API reference, including all generic types and abstract classes, on [pub.dev → cool_bedrock](https://pub.dev/documentation/cool_bedrock/latest/).
 
-
 ---
-
 
 ## 🤝 Contributing
 
 Contributions are welcome!
 
-* Open issues for bugs or feature requests
-* Fork the repo and submit a PR
-* Run `dart format` and `dart test` before submitting
+- Open issues for bugs or feature requests
+- Fork the repo and submit a PR
+- Run `dart format` and `dart test` before submitting
 
 ---
 

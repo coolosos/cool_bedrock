@@ -67,9 +67,8 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
   Self decode(Uint8List remote) => instanceFromMap(deserialize(remote));
 
   Map<String, dynamic> deserialize(Uint8List remote) {
-    final result = stringEncoding.decoder
-        .fuse(serializer.decoder)
-        .convert(remote);
+    final result =
+        stringEncoding.decoder.fuse(serializer.decoder).convert(remote);
     if (result is Map<String, dynamic>) {
       return result;
     } else if (result is List<dynamic>) {
