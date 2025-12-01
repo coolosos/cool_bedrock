@@ -1,3 +1,5 @@
+export 'package:fpdart/fpdart.dart';
+
 // Codable/Serialization
 export 'src/codable.dart';
 

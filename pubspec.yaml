@@ -2,8 +2,20 @@ name: cool_bedrock
 description: A bedrock package providing the blueprints and abstract definitions necessary to build a scalable and maintainable Dart/Flutter application.
 version: 1.0.0
 
+homepage: https://github.com/coolosos
+
+repository: https://github.com/coolosos/cool_bedrock
+issue_tracker: https://github.com/coolosos/cool_bedrock/issues
+
+topics:
+  - architecture
+  - clean-architecture
+  - domain-driven-design
+  - functional-programming
+  - core
+
 environment:
-  sdk: ^3.10.1
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   fpdart: ^1.2.0
