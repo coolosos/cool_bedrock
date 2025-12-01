@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 /// {@template cool_bedrock.simple_observer}
 /// A contract defining an observer for monitoring the creation and disposal
-/// lifecycle events of specific components within the application (e.g., Services, Usecases).
+/// lifecycle events of specific components within the application (e.g., Services, Usecase).
 ///
 /// This is particularly useful for centralized logging, debugging, or resource
 /// tracking within the core architecture.

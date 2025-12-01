@@ -101,7 +101,7 @@ abstract class UseCaseHandler<
   /// Retrieves the necessary data or dependencies to perform the use case logic.
   ///
   /// This method uses the [Resolver] (denoted by `$`) to safely unwrap values
-  /// from other fallible operations (e.g., other Usecases or Services)
+  /// from other fallible operations (e.g., other Usecase or Services)
   /// while automatically propagating errors.
   FutureOr<VALUES> obtainValues(Resolver<LEFT> $, UsecaseParams params);
 
