@@ -46,12 +46,8 @@ sealed class Case<UsecaseParams extends Params> {
 /// * **UsecaseParams**: The required input parameters, extending [Params].
 /// * **LEFT**: The specific type of [Failure] returned on the left side of the Either.
 /// {@endtemplate}
-abstract class UseCase<
-  TYPE extends Entity,
-  UsecaseParams extends Params,
-  LEFT extends Failure
->
-    extends Case<UsecaseParams> {
+abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
+    LEFT extends Failure> extends Case<UsecaseParams> {
   /// {@macro cool_bedrock.usecase}
   const UseCase();
 
@@ -89,14 +85,9 @@ abstract class UseCase<
 /// **Type Parameters:**
 /// * **VALUES**: The intermediary, raw data structure obtained from external sources.
 /// {@endtemplate}
-abstract class UseCaseHandler<
-  TYPE extends Entity,
-  UsecaseParams extends Params,
-  LEFT extends Failure,
-  VALUES extends Object
->
-    extends UseCase<TYPE, UsecaseParams, LEFT>
-    with UsecaseFlowManager {
+abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
+        LEFT extends Failure, VALUES extends Object>
+    extends UseCase<TYPE, UsecaseParams, LEFT> with UsecaseFlowManager {
   /// {@macro cool_bedrock.usecase_handler}
   const UseCaseHandler();
 
@@ -158,11 +149,8 @@ abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
 /// **Type Parameter:**
 /// * **TYPE**: The specific type of [Failure] returned if the condition fails.
 /// {@endtemplate}
-abstract class OneWayFailureUseCase<
-  TYPE extends Failure,
-  UsecaseParams extends Params
->
-    extends Case<UsecaseParams> {
+abstract class OneWayFailureUseCase<TYPE extends Failure,
+    UsecaseParams extends Params> extends Case<UsecaseParams> {
   /// {@macro cool_way_failure_usecase}
   const OneWayFailureUseCase();
 

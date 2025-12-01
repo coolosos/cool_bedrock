@@ -32,11 +32,11 @@ abstract base class SingleReplaySubjectService<T> implements AppService {
   /// Flushes the buffer to the first subscriber and clears the buffer,
   /// ensuring the replay happens only once.
   Stream<T>? get stream => _singleReplayController.stream.doOnListen(() {
-    for (final value in _noListenValues) {
-      _singleReplayController.add(value);
-    }
-    _noListenValues.clear();
-  });
+        for (final value in _noListenValues) {
+          _singleReplayController.add(value);
+        }
+        _noListenValues.clear();
+      });
 
   /// Adds a new event to the service.
   ///

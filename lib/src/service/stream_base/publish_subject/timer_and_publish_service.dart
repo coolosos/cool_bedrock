@@ -11,7 +11,7 @@ part of '../../app_service.dart';
 abstract base class TimerAndPublishService<T> implements AppService {
   /// {@macro cool_bedrock.timer_and_publish_service}
   TimerAndPublishService({required Duration periodicDuration})
-    : _periodicDuration = periodicDuration;
+      : _periodicDuration = periodicDuration;
 
   Timer? _timer;
   PublishSubject<T>? _publishSubject;
