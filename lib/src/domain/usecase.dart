@@ -1,16 +1,18 @@
 import 'dart:async';
 
-import 'package:cool_bedrock/usecase_flow_manager.dart';
+import 'package:cool_bedrock/src/domain/usecase_flow_manager.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
 
+import '../errors/issue.dart';
 import 'entity.dart';
-import 'issue.dart';
 import 'params.dart';
 
-export 'package:cool_bedrock/usecase_flow_manager.dart' show Resolver;
+export 'package:cool_bedrock/src/domain/usecase_flow_manager.dart'
+    show Resolver;
+
+export '../errors/issue.dart' show Failure;
 export 'entity.dart';
-export 'issue.dart' show Failure;
 export 'params.dart';
 
 /// {@template cool_bedrock.case}

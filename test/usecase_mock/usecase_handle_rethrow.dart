@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cool_bedrock/usecase.dart';
+import 'package:cool_bedrock/src/domain/usecase.dart';
 import 'package:fpdart/src/either.dart';
 
 final class UsecaseTestHandlerRethrowEntity extends Entity {
