@@ -22,7 +22,6 @@ sealed class Issue extends Equatable {
   bool? get stringify => true;
 }
 
-//! usecase
 /// {@template cool_bedrock.failure}
 /// Represents an expected error result from the Domain or Usecase layer.
 ///
