@@ -186,6 +186,13 @@ Check the full API reference, including all generic types and abstract classes, 
 
 ---
 
+# Authors & Maintainers
+
+This project was created and is primarily maintained by:
+
+*   **[Cayetano Bañón Rubio](https://github.com/Mithos5r)**
+*   **[Coolosos](https://github.com/coolosos)**
+
 ## 🤝 Contributing
 
 Contributions are welcome!
