@@ -51,23 +51,29 @@ This example demonstrates how to implement a UseCase, defining its specific Fail
 
 ```dart
 // 1. Define the specific Failure for this domain
-final class InvalidUserFailure extends Failure {
+sealed class FetchUserFailure extends Failure{
+  const FetchUserFailure();
+}
+final class InvalidUserFailure extends FetchUserFailure {
   const InvalidUserFailure() : super(message: 'Invalid User ID provided.');
+}
+final class InvalidParamsUserFailure extends FetchUserFailure {
+  const InvalidParamsUserFailure() : super(message: 'Invalid parameters provided.');
 }
 
 // 2. Implement the UseCase contract
 final class FetchUserUseCase
-    extends UseCase<UserEntity, FetchUserParams, InvalidUserFailure> {
+    extends UseCase<UserEntity, FetchUserParams, FetchUserFailure> {
   const FetchUserUseCase(this.repository);
 
   final UserRepository repository;
 
   // Called automatically if params.isNotValid is true.
   @override
-  InvalidUserFailure onInvalidParams() => const InvalidUserFailure();
+  FetchUserFailure onInvalidParams() => const InvalidParamsUserFailure();
 
   @override
-  Future<Either<InvalidUserFailure, UserEntity>> execute(
+  Future<Either<FetchUserFailure, UserEntity>> execute(
       FetchUserParams params) async {
     // Core logic goes here. Mappers and Repositories are typically called here.
     try {
@@ -79,6 +85,56 @@ final class FetchUserUseCase
     }
   }
 }
+
+final class FetchUserUseCaseHandle
+    extends
+        UseCaseHandler<
+          UserEntity,
+          AuthParams,
+          FetchUserFailure,
+          RepositoryValue
+        > {
+  const LoginUsecaseHandler({
+    required LoginRepository repository,
+  });
+
+  final UserRepository repository;
+
+  // Called automatically if params.isNotValid is true.
+  @override
+  FetchUserFailure onInvalidParams() => const InvalidParamsUserFailure();
+
+  //Obtain repository values. Multiple repository can be call.
+  @override
+  Future<RepositoryValue> obtainValues(
+    Resolver<FetchUserFailure> $,
+    AuthParams params,
+  ) async {
+    final user = await $(
+      getValue(
+        () => repository.fetch(params.userId),
+      ),
+    );
+    return user;
+  }
+
+  @override
+  UserEntity transformation(
+    RepositoryValue values,
+  ) {
+    if(values.name == null || values.name.isEmpty){
+      throw const UsecaseException(InvalidUserFailure());
+    }
+    //Can throw exception of any kind and it will be control by [wrapError]
+    return values.toEntity()
+  }
+
+  @override
+  FetchUserFailure wrapError(Object error, StackTrace stackTrace) {
+    return const InvalidUserFailure();
+  }
+}
+
 ```
 
 ### 2. Execution and Error Handling
