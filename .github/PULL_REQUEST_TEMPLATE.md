@@ -29,7 +29,7 @@ Please check the box that applies to your pull request.
 ## ✔️ Checklist
 
 Please make sure you have completed the following tasks before submitting your pull request:
-- [ ] I have read the [**CONTRIBUTING.md**](https://github.com/coolosos/networkcoolclient/blob/main/CONTRIBUTING.md) file.
+- [ ] I have read the [**CONTRIBUTING.md**](https://github.com/coolosos/cool_bedrock/blob/main/CONTRIBUTING.md) file.
 - [ ] My code follows the style guidelines of this project.
 - [ ] I have performed a self-review of my own code.
 - [ ] I have added tests that prove my fix is effective or that my feature works.
