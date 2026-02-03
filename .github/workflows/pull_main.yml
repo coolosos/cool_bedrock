@@ -7,7 +7,9 @@ on:
       - ready_for_review
       - synchronize
       - opened
-
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
   spellcheck:
     if: ${{ !github.event.pull_request.draft }}
