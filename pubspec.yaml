@@ -22,6 +22,7 @@ dependencies:
   equatable: ^2.0.7
   meta: ^1.17.0
   rxdart: ^0.28.0
+  collection: any
 
 dev_dependencies:
   coolint: 2.1.2
