@@ -159,7 +159,7 @@ abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
 /// **Type Parameters:**
 /// * [TYPE]: The domain [Entity] to be returned if found.
 /// * [UsecaseParams]: The input parameters for the query.
-/// 
+///
 /// ### ✅ Benefits:
 /// - **Null Safety**: Eliminates the risk of `null` related crashes by forcing the
 ///   caller to handle the [None] case explicitly.
@@ -189,7 +189,7 @@ abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
 }
 
 /// {@template cool_bedrock.one_way_failure_usecase}
-/// A specialized Usecase designed to produce an optional [Failure] result, 
+/// A specialized Usecase designed to produce an optional [Failure] result,
 /// but **no** successful domain [Entity].
 ///
 /// It implements the **Option** functional pattern where:
@@ -197,21 +197,21 @@ abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
 /// - [Some(Failure)]: Represents a **Problem** found during the check.
 ///
 /// ### ✅ Benefits:
-/// - **Focused Purpose**: Ideal for standalone validation logic, permission 
+/// - **Focused Purpose**: Ideal for standalone validation logic, permission
 ///   checks, or "guard clauses" that don't need to return data.
-/// - **UI Integration**: Very easy to use in form validation where you only 
+/// - **UI Integration**: Very easy to use in form validation where you only
 ///   care if there is an error message to display.
-/// - **Lightweight**: Avoids the overhead of defining a "Success" entity when 
+/// - **Lightweight**: Avoids the overhead of defining a "Success" entity when
 ///   the only goal is to verify a condition.
 ///
 /// ### ❌ Downsides:
 /// - **Inverted Intuition**: Confusing that `None` means "everything is okay."
-/// - **Limited Flow**: Cannot pass data forward. If you need to validate *and then* 
+/// - **Limited Flow**: Cannot pass data forward. If you need to validate *and then*
 ///   use the validated data, a standard `UseCase` or `UseCaseHandler` is better.
 ///
-/// **Best for:** Validation or verification Usecases (e.g., "Check if Username 
+/// **Best for:** Validation or verification Usecase (e.g., "Check if Username
 /// is Taken" or "Verify Premium Subscription Status").
-/// 
+///
 /// **Type Parameter:**
 /// * [TYPE]: The specific type of [Failure] returned if the condition fails.
 /// {@endtemplate}
