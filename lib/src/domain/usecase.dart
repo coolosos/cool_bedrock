@@ -42,9 +42,24 @@ sealed class Case<UsecaseParams extends Params> {
 /// upon error, or a successful [TYPE] entity upon success.
 ///
 /// **Type Parameters:**
-/// * **TYPE**: The success type, which must be a domain [Entity].
-/// * **UsecaseParams**: The required input parameters, extending [Params].
-/// * **LEFT**: The specific type of [Failure] returned on the left side of the Either.
+/// * [TYPE]: The success type, which must be a domain [Entity].
+/// * [UsecaseParams]: The required input parameters, extending [Params].
+/// * [LEFT]: The specific type of [Failure] returned on the left side of the Either.
+///
+/// ### ✅ Benefits:
+/// - **Predictability**: Guarantees that errors are handled as data (Left) rather
+///   than unhandled exceptions, leading to more stable applications.
+/// - **Clean Architecture Compliant**: Forces a clear separation between the
+///   caller (UI/Bloc) and the business logic.
+/// - **Built-in Validation**: Automatically checks [params.isNotValid] before
+///   execution, preventing logic errors from bad input.
+///
+/// ### ❌ Downsides:
+/// - **Manual Error Mapping**: In this base version, you must manually catch
+///   exceptions and map them to [LEFT] failures inside the [execute] method.
+/// - **Verbosity**: Requires more boilerplate than a simple function, as you
+///   need to define Failure types and Params for every action.
+///
 /// {@endtemplate}
 abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
     LEFT extends Failure> extends Case<UsecaseParams> {
@@ -79,11 +94,27 @@ abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
 /// A specialized Usecase designed to manage the flow of obtaining data ([VALUES]),
 /// handling potential errors, and transforming the result into the final [TYPE].
 ///
-/// It mixes in [UsecaseFlowManager] (likely a helper mixin for chaining futures
-/// and handling the `Either` monad).
+/// This handler enforces a structured lifecycle: **Obtain -> Transform -> Handle Errors**.
 ///
 /// **Type Parameters:**
-/// * **VALUES**: The intermediary, raw data structure obtained from external sources.
+/// * [TYPE]: The final Domain Entity returned on success.
+/// * [UsecaseParams]: The input parameters for this use case.
+/// * [LEFT]: The specific Failure type for this domain.
+/// * [VALUES]: The intermediary, raw data structure obtained from external sources.
+///
+/// ### ✅ Benefits:
+/// - **Clean Logic Separation**: Decouples data fetching from domain transformation.
+/// - **Standardized Flow**: Ensures all UseCases follow the same execution pattern,
+///   making code reviews easier.
+/// - **Safe Error Propagation**: Uses the [Resolver] pattern to flatten nested
+///   error handling (eliminating "callback hell" or deep try-catch blocks).
+///
+/// ### ❌ Downsides:
+/// - **Boilerplate for Simple Tasks**: Might feel verbose for operations that
+///   only perform a single repository call with no transformation.
+/// - **Stricter Structure**: Forces a specific execution flow which might require
+///   adaptation for non-linear business logic.
+///
 /// {@endtemplate}
 abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
         LEFT extends Failure, VALUES extends Object>
@@ -123,7 +154,25 @@ abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
 /// but is **not** expected to fail with a specific [Failure].
 ///
 /// It implements the **Option** functional pattern, signaling the success
-/// or absence of a value.
+/// or absence of a value (Some vs None).
+///
+/// **Type Parameters:**
+/// * [TYPE]: The domain [Entity] to be returned if found.
+/// * [UsecaseParams]: The input parameters for the query.
+/// 
+/// ### ✅ Benefits:
+/// - **Null Safety**: Eliminates the risk of `null` related crashes by forcing the
+///   caller to handle the [None] case explicitly.
+/// - **Semantic Clarity**: Perfect for "Lookup" operations where a missing
+///   result is a valid business outcome, not an error (e.g., Search).
+/// - **Simplicity**: No need to define complex Failure hierarchies or error
+///   mapping logic.
+///
+/// ### ❌ Downsides:
+/// - **Silent Failures**: Since it doesn't return a [Failure], you cannot
+///   tell *why* an operation returned [None] (e.g., was it a 404, a timeout, or a server error?).
+/// - **Limited Context**: Not suitable for operations where the UI needs to
+///   show a specific error message to the user based on what went wrong.
 ///
 /// **Best for:** Queries where the expected result might simply be missing
 /// (e.g., "Find User by ID" which may return None instead of a Failure).
@@ -140,14 +189,31 @@ abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
 }
 
 /// {@template cool_bedrock.one_way_failure_usecase}
-/// A specialized Usecase designed to produce an optional [Failure] result
-/// or nothing, but **no** successful domain [Entity].
+/// A specialized Usecase designed to produce an optional [Failure] result, 
+/// but **no** successful domain [Entity].
 ///
-/// This is sometimes used for validation or verification Usecase that check
-/// a condition and return a Failure only if the condition is not met.
+/// It implements the **Option** functional pattern where:
+/// - [None]: Represents **Success** (no failure occurred).
+/// - [Some(Failure)]: Represents a **Problem** found during the check.
 ///
+/// ### ✅ Benefits:
+/// - **Focused Purpose**: Ideal for standalone validation logic, permission 
+///   checks, or "guard clauses" that don't need to return data.
+/// - **UI Integration**: Very easy to use in form validation where you only 
+///   care if there is an error message to display.
+/// - **Lightweight**: Avoids the overhead of defining a "Success" entity when 
+///   the only goal is to verify a condition.
+///
+/// ### ❌ Downsides:
+/// - **Inverted Intuition**: Confusing that `None` means "everything is okay."
+/// - **Limited Flow**: Cannot pass data forward. If you need to validate *and then* 
+///   use the validated data, a standard `UseCase` or `UseCaseHandler` is better.
+///
+/// **Best for:** Validation or verification Usecases (e.g., "Check if Username 
+/// is Taken" or "Verify Premium Subscription Status").
+/// 
 /// **Type Parameter:**
-/// * **TYPE**: The specific type of [Failure] returned if the condition fails.
+/// * [TYPE]: The specific type of [Failure] returned if the condition fails.
 /// {@endtemplate}
 abstract class OneWayFailureUseCase<TYPE extends Failure,
     UsecaseParams extends Params> extends Case<UsecaseParams> {
