@@ -23,6 +23,9 @@ abstract class Params with EquatableMixin {
 
   /// Returns the inverse of [isValid]. True if the parameters are not valid.
   bool get isNotValid => !isValid;
+
+  @override
+  bool? get stringify => true;
 }
 
 /// {@template cool_bedrock.no_params}
@@ -32,7 +35,7 @@ abstract class Params with EquatableMixin {
 /// This ensures type safety and avoids passing `null` for the parameters
 /// argument of a Usecase.
 /// {@endtemplate}
-class NoParams extends Params {
+final class NoParams extends Params {
   /// {@macro cool_bedrock.no_params}
   const NoParams();
 
