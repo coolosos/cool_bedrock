@@ -30,12 +30,7 @@ abstract base class TimerAndBehaviorService<T> implements AppService {
   /// Provides access to the underlying stream for external subscriptions.
   ///
   /// Returns the stream of the internal [BehaviorSubject] if it is active.
-  Stream<T>? get stream async* {
-    final stream = _behaviorSubject?.stream;
-    if (stream != null) {
-      yield* stream;
-    }
-  }
+  Stream<T>? get stream => _behaviorSubject?.stream;
 
   /// Adds a new value to the subject, broadcasting it to all active listeners.
   void add(T event) {
@@ -51,10 +46,9 @@ abstract base class TimerAndBehaviorService<T> implements AppService {
     if (_behaviorSubject == null || (_behaviorSubject?.isClosed ?? true)) {
       _behaviorSubject = BehaviorSubject<T>();
     }
-    if (_timer?.isActive ?? false) {
-      _periodic();
-      return;
-    }
+
+    if (_timer?.isActive ?? false) return;
+
     _timer = Timer.periodic(_periodicDuration, (timer) async {
       await _periodic();
     });
@@ -76,5 +70,6 @@ abstract base class TimerAndBehaviorService<T> implements AppService {
   @override
   void stop() {
     _timer?.cancel();
+    _timer = null;
   }
 }

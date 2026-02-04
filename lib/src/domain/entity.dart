@@ -18,11 +18,10 @@ import 'package:meta/meta.dart';
 abstract class Entity extends Equatable {
   /// {@macro cool_bedrock.entity}
   const Entity();
-  // coverage:ignore-start
+
   @override
   List<Object?> get props;
 
   @override
   bool? get stringify => true;
-  // coverage:ignore-end
 }

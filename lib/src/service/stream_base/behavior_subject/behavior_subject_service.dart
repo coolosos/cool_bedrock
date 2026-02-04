@@ -25,12 +25,7 @@ abstract base class BehaviorSubjectService<T> implements AppService {
   Future<void> work();
 
   /// Provides access to the underlying stream for external subscriptions.
-  Stream<T>? get stream async* {
-    final stream = _behaviorSubject?.stream;
-    if (stream != null) {
-      yield* stream;
-    }
-  }
+  Stream<T>? get stream => _behaviorSubject?.stream;
 
   /// Adds a new value to the subject, broadcasting it to all active listeners.
   ///

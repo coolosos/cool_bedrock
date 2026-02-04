@@ -22,6 +22,7 @@ void main() {
       expect(exception.stringify, isTrue);
       expect(exception.toString(), contains('MockException'));
       expect(exception.message, isNotEmpty);
+      expect(exception.props, isEmpty);
     });
   });
 }
