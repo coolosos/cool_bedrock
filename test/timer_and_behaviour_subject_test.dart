@@ -55,7 +55,6 @@ void main() {
 
         async.elapse(duration);
 
-      
         expect(results.length, 1);
         service.dispose();
       });
