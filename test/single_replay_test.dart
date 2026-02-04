@@ -87,8 +87,7 @@ void main() {
     });
 
     test('Should buffer events and respect maxBufferSize when no listener', () {
-      // No nos suscribimos -> hasListener es false
-
+      //No subscription -> hasListener ==  false
       service.add('event 1');
       service.add('event 2');
       service.add(
