@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:test/test.dart';
 
 import 'service_mock/single_replay/single_replay_mock.dart';

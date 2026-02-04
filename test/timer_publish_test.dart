@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:fake_async/fake_async.dart';
 import 'package:test/test.dart';
 

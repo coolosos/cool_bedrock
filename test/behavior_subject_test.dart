@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:test/test.dart';
 
 import 'service_mock/behavior/behavior_subject_mock.dart';
