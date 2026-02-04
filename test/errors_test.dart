@@ -22,7 +22,7 @@ void main() {
       expect(exception.stringify, isTrue);
       expect(exception.toString(), contains('MockException'));
       expect(exception.message, isNotEmpty);
-      expect(exception.props, isEmpty);
+      expect(exception.props, isNotEmpty);
     });
   });
 }
@@ -49,7 +49,4 @@ final class MockException extends DataSourceException {
           requestHeaders: const {},
           requestUri: null,
         );
-
-  @override
-  List<Object?> get props => [];
 }
