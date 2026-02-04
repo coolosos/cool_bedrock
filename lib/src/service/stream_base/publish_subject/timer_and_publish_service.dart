@@ -45,10 +45,8 @@ abstract base class TimerAndPublishService<T> implements AppService {
     if (_publishSubject == null || (_publishSubject?.isClosed ?? true)) {
       _publishSubject = PublishSubject();
     }
-    if (_timer?.isActive ?? false) {
-      _periodic();
-      return;
-    }
+    if (_timer?.isActive ?? false) return;
+
     _timer = Timer.periodic(_periodicDuration, (timer) async {
       await _periodic();
     });

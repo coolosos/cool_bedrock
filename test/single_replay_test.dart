@@ -2,6 +2,7 @@
 
 import 'package:test/test.dart';
 
+import 'service_mock/single_replay/single_replay_max_buffer_mock.dart';
 import 'service_mock/single_replay/single_replay_mock.dart';
 
 void main() {
@@ -59,6 +60,64 @@ void main() {
       await Future.delayed(Duration.zero);
 
       expect(isDone, isTrue, reason: 'StreamController should be closed');
+    });
+  });
+
+  group('SingleReplaySubjectMaxBufferService', () {
+    late MockSingleReplayMaxBuffer service;
+
+    setUp(() {
+      service = MockSingleReplayMaxBuffer(maxBufferSize: 2);
+      service.start();
+    });
+    test('Should add event directly to stream when there is a listener',
+        () async {
+      final events = <String>[];
+
+      service.stream.listen(events.add);
+
+      await Future.delayed(Duration.zero);
+
+      service.add('event 1');
+
+      await Future.delayed(Duration.zero);
+
+      expect(events, contains('event 1'));
+      expect(events, hasLength(1));
+    });
+
+    test('Should buffer events and respect maxBufferSize when no listener', () {
+      // No nos suscribimos -> hasListener es false
+
+      service.add('event 1');
+      service.add('event 2');
+      service.add(
+        'event 3',
+      );
+
+      service.stream.listen(
+        expectAsync1(
+          (event) {},
+          count: 2,
+        ),
+      );
+    });
+
+    test('Should reset _isFlushed to false when adding to buffer', () async {
+      // 1. Flush inicial
+      service.add('event 1');
+      final sub = service.stream.listen((_) {});
+      await Future.microtask(() {});
+
+      await sub.cancel();
+
+      service.add('event 2');
+
+      service.stream.listen(
+        expectAsync1((event) {
+          expect(event, equals('event 2'));
+        }),
+      );
     });
   });
 }
