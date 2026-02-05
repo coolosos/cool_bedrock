@@ -108,7 +108,7 @@ void main() {
     });
 
     test('Should reset _isFlushed to false when adding to buffer', () async {
-      // 1. Flush inicial
+      // 1. Flush initial
       service.add('event 1');
       final sub = service.stream.listen((_) {});
       await Future.microtask(() {});
