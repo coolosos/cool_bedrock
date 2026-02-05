@@ -86,7 +86,8 @@ void main() {
       expect(events, hasLength(1));
     });
 
-    test('Should buffer events and respect maxBufferSize when no listener', () {
+    test('Should buffer events and respect maxBufferSize when no listener',
+        () async {
       //No subscription -> hasListener ==  false
       service.add('event 1');
       service.add('event 2');
@@ -94,12 +95,16 @@ void main() {
         'event 3',
       );
 
+      final buffer = <String>[];
       service.stream.listen(
         expectAsync1(
-          (event) {},
+          buffer.add,
           count: 2,
         ),
       );
+      await Future.delayed(Duration.zero);
+      expect(buffer.first, equals('event 2'));
+      expect(buffer.last, equals('event 3'));
     });
 
     test('Should reset _isFlushed to false when adding to buffer', () async {
