@@ -45,9 +45,7 @@ abstract class Codable<T, Self extends Codable<T, Self>> with EquatableMixin {
   Self decode(T remote);
 
   @override
-  // coverage:ignore-start
   bool? get stringify => true;
-  // coverage:ignore-end
 }
 
 @immutable

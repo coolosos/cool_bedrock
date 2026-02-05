@@ -94,7 +94,7 @@ final class FetchUserUseCaseHandle
           FetchUserFailure,
           RepositoryValue
         > {
-  const LoginUsecaseHandler({
+  const FetchUserUseCaseHandle({
     required LoginRepository repository,
   });
 
@@ -179,6 +179,21 @@ final class HeartbeatService extends TimerAndBehaviorService<int> {
 }
 
 ```
+
+---
+
+## 🏗️ Use Case Types Comparison
+
+Choosing the right base class ensures your business logic is expressive and safe. Use this table as a quick guide to decide which one fits your needs:
+
+| Use Case Type | Success Return | Error Return | Best For... |
+| :--- | :--- | :--- | :--- |
+| **`UseCase`** | `Right(Entity)` | `Left(Failure)` | Standard business logic with manual error mapping. |
+| **`UseCaseHandler`** | `Right(Entity)` | `Left(Failure)` | Business logic with data fetching, transformation and error mapping. |
+| **`OneWayUseCase`** | `Some(Entity)` | `None` | Queries where the absence of a value is a valid result (e.g., Search). |
+| **`OneWayFailureUseCase`**| `None` (Success) | `Some(Failure)` | Standalone validations and guard checks (e.g., Is email taken?). |
+
+---
 
 ## 📚 API Reference
 

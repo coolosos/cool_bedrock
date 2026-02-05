@@ -12,7 +12,6 @@ import 'package:equatable/equatable.dart';
 /// All possible error types are restricted to the types defined within
 /// the same package/library, enabling robust pattern matching.
 /// {@endtemplate}
-// coverage:ignore-start
 sealed class Issue extends Equatable {
   const Issue({this.message});
 
@@ -75,7 +74,6 @@ abstract base class DataSourceException extends Issue implements Exception {
   @override
   List<Object?> get props => [requestHeaders, requestUri, requestBody];
 }
-// coverage:ignore-end
 
 /// {@template cool_bedrock.usecase_exception}
 /// An explicit exception type wrapper used to propagate a specific [Failure]

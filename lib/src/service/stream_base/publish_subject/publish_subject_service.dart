@@ -23,12 +23,7 @@ abstract base class PublishSubjectService<T> implements AppService {
   Future<void> work();
 
   /// Provides access to the underlying stream for external subscriptions.
-  Stream<T>? get stream async* {
-    final stream = _publishSubject?.stream;
-    if (stream is Stream<T>) {
-      yield* stream;
-    }
-  }
+  Stream<T>? get stream => _publishSubject?.stream;
 
   /// Adds a new event to the subject, broadcasting it to all currently active listeners.
   ///
