@@ -26,13 +26,13 @@ abstract class Codable<T, Self extends Codable<T, Self>> with EquatableMixin {
   ///
   /// Concrete implementations must provide the encoding used to interpret
   /// the remote data if applicable (e.g., when T is `String` or `Uint8List`).
-  Encoding? get stringEncoding;
+  Encoding? get encoding;
 
   /// The JSON codec (serializer) used to transform between raw JSON strings/bytes
   /// and Dart objects.
   ///
   /// This is typically provided by `dart:convert`.
-  JsonCodec? get serializer;
+  Codec? get serializer;
 
   /// Decodes the remote data representation into an instance of the local Dart model.
   ///
@@ -54,7 +54,7 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
   const JsonBytesCodable();
 
   @override
-  Encoding get stringEncoding => const Utf8Codec(allowMalformed: true);
+  Encoding get encoding => const Utf8Codec(allowMalformed: true);
   @override
   JsonCodec get serializer => const JsonCodec();
 
@@ -65,8 +65,7 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
   Self decode(Uint8List remote) => instanceFromMap(deserialize(remote));
 
   Map<String, dynamic> deserialize(Uint8List remote) {
-    final result =
-        stringEncoding.decoder.fuse(serializer.decoder).convert(remote);
+    final result = encoding.decoder.fuse(serializer.decoder).convert(remote);
     if (result is Map<String, dynamic>) {
       return result;
     } else if (result is List<dynamic>) {
@@ -97,7 +96,7 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
   ///
   /// Fixed to **UTF-8** with permissive handling for malformed bytes.
   @override
-  Encoding? get stringEncoding => const Utf8Codec(allowMalformed: true);
+  Encoding? get encoding => const Utf8Codec(allowMalformed: true);
 
   /// Specifies the JSON serializer/deserializer.
   ///
@@ -131,7 +130,7 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
   /// - Returns: The deserialized [Map<String, dynamic>].
   Map<String, dynamic> deserialize(String remote) {
     final Object? result;
-    if (stringEncoding case final stringEncoding?) {
+    if (encoding case final stringEncoding?) {
       result = stringEncoding.decoder
           .fuse(serializer.decoder)
           .convert(remote.codeUnits);
