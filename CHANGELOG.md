@@ -1,4 +1,8 @@
-## 1.0.1 - 2026-2-11
+## 2.0.0
+### ⚠️ Breaking changes
+- Change codable naming and field extend
+
+## 1.0.1
 - ✏️ Example and documentation
 - ✏️ Test coverage
 
