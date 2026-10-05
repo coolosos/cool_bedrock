@@ -12,9 +12,5 @@ final class UserEntity extends Entity {
   final DateTime birthday;
 
   @override
-  List<Object?> get props => [
-        name,
-        surname,
-        birthday,
-      ];
+  List<Object?> get props => [name, surname, birthday];
 }
