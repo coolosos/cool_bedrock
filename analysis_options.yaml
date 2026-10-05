@@ -1,10 +1,12 @@
 include: package:coolint/dart.yaml
 
 analyzer:
-  exclude:
-    # The example is a separate package with its own pubspec; it is not linted here.
-    - "example/**"
   errors:
     # Deprecated since Dart 3.13 and contradictory with async_return_with_no_await:
     # it asks to remove the 'await' that the other rule requires on returned Futures.
     unnecessary_await_in_return: ignore
+    # coolint 3.0.0 targets a Dart version where unnamed primary constructors
+    # ('const;' and 'const {...}') are available, but the supported SDK (3.13)
+    # only parses the explicitly named form ('const new();'). Following this
+    # lint on 3.13 produces code that does not compile.
+    unnecessary_type_name_in_constructor: ignore
