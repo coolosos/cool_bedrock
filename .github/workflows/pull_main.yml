@@ -15,8 +15,8 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: streetsidesoftware/cspell-action@v8.3.0
+      - uses: actions/checkout@v7
+      - uses: streetsidesoftware/cspell-action@v9.1.0
   validate:
     name: Analyse
     if: ${{ !github.event.pull_request.draft }}
@@ -24,9 +24,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Dart SDK
-        uses: dart-lang/setup-dart@v1.7.1
+        uses: dart-lang/setup-dart@v1.8.1
       - name: Install dependencies
         run: dart pub get
       - name: Analyze project
@@ -38,7 +38,7 @@ jobs:
       - name: Generate LCOV report
         run: dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=lib
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/lcov.info
