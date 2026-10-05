@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print Example view
 
 import 'package:example_cool_bedrock/data/user/user_repository.dart';
 import 'package:example_cool_bedrock/domain/usecase/user_information_usecase.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: cascade_invocations
+// ignore_for_file: cascade_invocations Test visibility
 
 import 'package:test/test.dart';
 
@@ -23,7 +23,7 @@ void main() {
 
       final secondResults = <String>[];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       final sub2 = service.stream.listen(secondResults.add);
 
@@ -36,16 +36,18 @@ void main() {
 
       await sub2.cancel();
     });
-    test('should buffer events added manually when no listener is present',
-        () async {
-      service.start();
-      service.add('Manual Buffer');
+    test(
+      'should buffer events added manually when no listener is present',
+      () async {
+        service.start();
+        service.add('Manual Buffer');
 
-      final results = <String>[];
-      await service.stream.first.then(results.add);
+        final results = <String>[];
+        await service.stream.first.then(results.add);
 
-      expect(results, contains('Init Event 1'));
-    });
+        expect(results, contains('Init Event 1'));
+      },
+    );
 
     test('should clean up and close controller on dispose', () async {
       service.start();
@@ -53,11 +55,11 @@ void main() {
 
       service.stream.listen((_) {}, onDone: () => isDone = true);
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       service.dispose();
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(isDone, isTrue, reason: 'StreamController should be closed');
     });
@@ -70,42 +72,39 @@ void main() {
       service = MockSingleReplayMaxBuffer(maxBufferSize: 2);
       service.start();
     });
-    test('Should add event directly to stream when there is a listener',
-        () async {
-      final events = <String>[];
+    test(
+      'Should add event directly to stream when there is a listener',
+      () async {
+        final events = <String>[];
 
-      service.stream.listen(events.add);
+        service.stream.listen(events.add);
 
-      await Future.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-      service.add('event 1');
+        service.add('event 1');
 
-      await Future.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-      expect(events, contains('event 1'));
-      expect(events, hasLength(1));
-    });
+        expect(events, contains('event 1'));
+        expect(events, hasLength(1));
+      },
+    );
 
-    test('Should buffer events and respect maxBufferSize when no listener',
-        () async {
-      //No subscription -> hasListener ==  false
-      service.add('event 1');
-      service.add('event 2');
-      service.add(
-        'event 3',
-      );
+    test(
+      'Should buffer events and respect maxBufferSize when no listener',
+      () async {
+        //No subscription -> hasListener ==  false
+        service.add('event 1');
+        service.add('event 2');
+        service.add('event 3');
 
-      final buffer = <String>[];
-      service.stream.listen(
-        expectAsync1(
-          buffer.add,
-          count: 2,
-        ),
-      );
-      await Future.delayed(Duration.zero);
-      expect(buffer.first, equals('event 2'));
-      expect(buffer.last, equals('event 3'));
-    });
+        final buffer = <String>[];
+        service.stream.listen(expectAsync1(buffer.add, count: 2));
+        await Future<void>.delayed(Duration.zero);
+        expect(buffer.first, equals('event 2'));
+        expect(buffer.last, equals('event 3'));
+      },
+    );
 
     test('Should reset _isFlushed to false when adding to buffer', () async {
       // 1. Flush initial

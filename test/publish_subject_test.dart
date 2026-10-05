@@ -20,7 +20,7 @@ void main() {
 
       service.add('Caught Event');
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(results, ['Caught Event']);
       expect(results, isNot(contains('Lost Event')));
@@ -39,7 +39,7 @@ void main() {
 
       service.add('Hello');
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(results1, ['Hello']);
       expect(results2, ['Hello']);
@@ -53,7 +53,7 @@ void main() {
       service.stream?.listen(results.add);
 
       service.add('After Stop');
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(results, ['After Stop']);
     });

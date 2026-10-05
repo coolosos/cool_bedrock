@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 /// from a remote representation to a local Dart object (decoding/deserialization).
 ///
 /// This abstract class enforces type safety for mapping operations and integrates
-/// with [EquatableMixin] for reliable object comparison.
+/// with [Equatable] for reliable object comparison.
 ///
 /// **Type Parameters:**
 /// * **T**: The remote data type (e.g., `Map<String, dynamic>`, `String`, or `Uint8List`).
@@ -18,9 +18,9 @@ import 'package:meta/meta.dart';
 ///   This is known as the **F-Bounded Polymorphism** pattern.
 /// {@endtemplate}
 @immutable
-abstract class Codable<T, Self extends Codable<T, Self>> with EquatableMixin {
+abstract class Codable<T, Self extends Codable<T, Self>> with Equatable {
   /// {@macro cool_bedrock.codable}
-  const Codable();
+  const new();
 
   /// The specific string encoding (e.g., 'utf-8') required for the remote data.
   ///
@@ -32,7 +32,7 @@ abstract class Codable<T, Self extends Codable<T, Self>> with EquatableMixin {
   /// and Dart objects.
   ///
   /// This is typically provided by `dart:convert`.
-  Codec? get serializer;
+  Codec<dynamic, dynamic>? get serializer;
 
   /// Decodes the remote data representation into an instance of the local Dart model.
   ///
@@ -51,7 +51,7 @@ abstract class Codable<T, Self extends Codable<T, Self>> with EquatableMixin {
 @immutable
 abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
     extends Codable<Uint8List, Self> {
-  const JsonBytesCodable();
+  const new();
 
   @override
   Encoding get encoding => const Utf8Codec(allowMalformed: true);
@@ -90,7 +90,7 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
 abstract class JsonStringCodable<Self extends Codable<String, Self>>
     extends Codable<String, Self> {
   /// {@macro cool_bedrock.json_bytes_codable}
-  const JsonStringCodable();
+  const new();
 
   /// Specifies the required string encoding for decoding the byte array.
   ///

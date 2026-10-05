@@ -13,7 +13,7 @@ import 'package:equatable/equatable.dart';
 /// the same package/library, enabling robust pattern matching.
 /// {@endtemplate}
 sealed class Issue extends Equatable {
-  const Issue({this.message});
+  const new({this.message});
 
   /// A human-readable message describing the issue or the cause of the error.
   final String? message;
@@ -31,7 +31,7 @@ sealed class Issue extends Equatable {
 /// {@endtemplate}
 abstract base class Failure extends Issue {
   /// {@macro cool_bedrock.failure}
-  const Failure({super.message});
+  const new({super.message});
 }
 
 /// {@template cool_bedrock.repository_error}
@@ -44,7 +44,7 @@ abstract base class Failure extends Issue {
 /// {@endtemplate}
 abstract base class RepositoryError extends Issue {
   /// {@macro cool_bedrock.repository_error}
-  const RepositoryError({super.message});
+  const new({super.message});
 }
 
 /// {@template cool_bedrock.data_source_exception}
@@ -56,7 +56,7 @@ abstract base class RepositoryError extends Issue {
 /// {@endtemplate}
 abstract base class DataSourceException extends Issue implements Exception {
   /// {@macro cool_bedrock.data_source_exception}
-  const DataSourceException({
+  const new({
     this.requestHeaders,
     this.requestUri,
     this.requestBody,
@@ -87,7 +87,7 @@ abstract base class DataSourceException extends Issue implements Exception {
 ///   that is a subtype of [Failure].
 /// {@endtemplate}
 final class UsecaseException<Promotional extends Failure> implements Exception {
-  const UsecaseException(this.failure);
+  const new(this.failure);
 
   final Promotional failure;
 }

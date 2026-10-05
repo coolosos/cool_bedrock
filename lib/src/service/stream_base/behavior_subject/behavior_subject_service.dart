@@ -13,7 +13,7 @@ part of '../../app_service.dart';
 /// {@endtemplate}
 abstract base class BehaviorSubjectService<T> implements AppService {
   /// {@macro cool_bedrock.behavior_subject_service}
-  BehaviorSubjectService();
+  new();
 
   BehaviorSubject<T>? _behaviorSubject;
 

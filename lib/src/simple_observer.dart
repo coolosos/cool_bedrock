@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 /// {@endtemplate}
 abstract interface class SimpleObserver {
   /// {@macro cool_bedrock.simple_observer}
-  const SimpleObserver();
+  const new();
 
   /// Called immediately after a component has been successfully created and initialized.
   ///

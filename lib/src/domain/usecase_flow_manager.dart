@@ -7,8 +7,12 @@ import 'package:meta/meta.dart';
 
 typedef Resolver<LEFT> = Future<A> Function<A>(TaskEither<LEFT, A>);
 
-mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
-    LEFT extends Failure> on UseCase<TYPE, UsecaseParams, LEFT> {
+mixin UsecaseFlowManager<
+  TYPE extends Entity,
+  UsecaseParams extends Params,
+  LEFT extends Failure
+>
+    on UseCase<TYPE, UsecaseParams, LEFT> {
   /// Handles unexpected errors and maps them to a specific [LEFT] failure.
   LEFT wrapError(Object error, StackTrace stackTrace);
 
@@ -28,12 +32,9 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
         final data = await TaskEither<LEFT, TYPE>.Do(($) async {
           final data = await getValues($);
           return $(
-            mapper(
-              () {
-                return transform(data);
-              },
-              wrapError,
-            ),
+            mapper(() {
+              return transform(data);
+            }, wrapError),
           );
         }).run();
 
@@ -102,7 +103,7 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
 
 /// Internal wrapper for exceptions occurring in the data layer.
 final class _DataLayerError<ISSUE extends Issue> implements Exception {
-  const _DataLayerError(this.issue);
+  const new(this.issue);
 
   final ISSUE issue;
 }

@@ -1,4 +1,6 @@
-include: package:coolint/coolint.yaml
+include: package:coolint/dart.yaml
 analyzer:
-  errors:
-    document_ignores: ignore
+  exclude:
+    - "**/example/**"
+  enable-experiment:
+    - primary-constructors
