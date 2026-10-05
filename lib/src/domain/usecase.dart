@@ -23,7 +23,7 @@ export 'params.dart';
 /// {@endtemplate}
 sealed class Case<UsecaseParams extends Params> {
   /// {@macro cool_bedrock.case}
-  const Case();
+  const new();
 
   /// Executes the command or query with the provided parameters.
   ///
@@ -51,7 +51,7 @@ sealed class Case<UsecaseParams extends Params> {
 ///   than unhandled exceptions, leading to more stable applications.
 /// - **Clean Architecture Compliant**: Forces a clear separation between the
 ///   caller (UI/Bloc) and the business logic.
-/// - **Built-in Validation**: Automatically checks [params.isNotValid] before
+/// - **Built-in Validation**: Automatically checks [Params.isNotValid] before
 ///   execution, preventing logic errors from bad input.
 ///
 /// ### ❌ Downsides:
@@ -61,10 +61,14 @@ sealed class Case<UsecaseParams extends Params> {
 ///   need to define Failure types and Params for every action.
 ///
 /// {@endtemplate}
-abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
-    LEFT extends Failure> extends Case<UsecaseParams> {
+abstract class UseCase<
+  TYPE extends Entity,
+  UsecaseParams extends Params,
+  LEFT extends Failure
+>
+    extends Case<UsecaseParams> {
   /// {@macro cool_bedrock.usecase}
-  const UseCase();
+  const new();
 
   /// Defines the specific [Failure] that should be returned when the
   /// input [UsecaseParams] are invalid.
@@ -79,7 +83,7 @@ abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
     if (params.isNotValid) {
       return Left(onInvalidParams());
     }
-
+    // ignore: async_return_with_no_await will be wait for TaskEither.Do
     return execute(params);
   }
 
@@ -116,11 +120,16 @@ abstract class UseCase<TYPE extends Entity, UsecaseParams extends Params,
 ///   adaptation for non-linear business logic.
 ///
 /// {@endtemplate}
-abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
-        LEFT extends Failure, VALUES extends Object>
-    extends UseCase<TYPE, UsecaseParams, LEFT> with UsecaseFlowManager {
+abstract class UseCaseHandler<
+  TYPE extends Entity,
+  UsecaseParams extends Params,
+  LEFT extends Failure,
+  VALUES extends Object
+>
+    extends UseCase<TYPE, UsecaseParams, LEFT>
+    with UsecaseFlowManager {
   /// {@macro cool_bedrock.usecase_handler}
-  const UseCaseHandler();
+  const new();
 
   /// Retrieves the necessary data or dependencies to perform the use case logic.
   ///
@@ -180,7 +189,7 @@ abstract class UseCaseHandler<TYPE extends Entity, UsecaseParams extends Params,
 abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
     extends Case<UsecaseParams> {
   /// {@macro cool_bedrock.one_way_usecase}
-  const OneWayUseCase();
+  const new();
 
   /// Executes the logic and returns an [Option] containing the [TYPE]
   /// if successful and found, or [None] if the value is absent.
@@ -215,10 +224,13 @@ abstract class OneWayUseCase<TYPE extends Entity, UsecaseParams extends Params>
 /// **Type Parameter:**
 /// * [TYPE]: The specific type of [Failure] returned if the condition fails.
 /// {@endtemplate}
-abstract class OneWayFailureUseCase<TYPE extends Failure,
-    UsecaseParams extends Params> extends Case<UsecaseParams> {
+abstract class OneWayFailureUseCase<
+  TYPE extends Failure,
+  UsecaseParams extends Params
+>
+    extends Case<UsecaseParams> {
   /// {@macro cool_way_failure_usecase}
-  const OneWayFailureUseCase();
+  const new();
 
   /// Executes the logic and returns an [Option] containing the [Failure]
   /// if the condition fails, or [None] if the check passes (success).

@@ -1,5 +1,5 @@
 final class UserRemote {
-  const UserRemote({
+  const new({
     this.name,
     this.surname,
     this.direction,

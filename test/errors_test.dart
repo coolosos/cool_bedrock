@@ -28,25 +28,25 @@ void main() {
 }
 
 final class MockFailure extends Failure {
-  const MockFailure() : super(message: 'message');
+  const new() : super(message: 'message');
 
   @override
   List<Object?> get props => [];
 }
 
 final class MockError extends RepositoryError {
-  const MockError() : super(message: 'message');
+  const new() : super(message: 'message');
 
   @override
   List<Object?> get props => [];
 }
 
 final class MockException extends DataSourceException {
-  const MockException()
-      : super(
-          message: 'Message',
-          requestBody: null,
-          requestHeaders: const {},
-          requestUri: null,
-        );
+  const new()
+    : super(
+        message: 'Message',
+        requestBody: null,
+        requestHeaders: const {},
+        requestUri: null,
+      );
 }

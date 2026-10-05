@@ -15,7 +15,7 @@ part of '../../app_service.dart';
 /// {@endtemplate}
 abstract base class SingleReplaySubjectService<T> implements AppService {
   /// {@macro cool_bedrock.single_replay_subject_service}
-  SingleReplaySubjectService({this.maxBufferSize});
+  new({this.maxBufferSize});
 
   /// Internal controller used for event management and broadcasting.
   /// It must be a broadcast stream since multiple listeners are possible.
@@ -44,13 +44,14 @@ abstract base class SingleReplaySubjectService<T> implements AppService {
 
     proxyController.onListen = () {
       //Subscribe to the live stream IMMEDIATELY to avoid missing events.
-      final liveSubscription = _singleReplayController!.stream.listen(
-        proxyController.add,
-        onError: proxyController.addError,
-        onDone: proxyController.close,
-      )
-        // PAUSE the live subscription. Ensures that if new events arrive they are held.
-        ..pause();
+      final liveSubscription =
+          _singleReplayController!.stream.listen(
+              proxyController.add,
+              onError: proxyController.addError,
+              onDone: proxyController.close,
+            )
+            // PAUSE the live subscription. Ensures that if new events arrive they are held.
+            ..pause();
 
       // Check the flag. If the buffer hasn't been consumed yet, it belongs to this listener.
       if (!_isFlushed && _noListenValues.isNotEmpty) {

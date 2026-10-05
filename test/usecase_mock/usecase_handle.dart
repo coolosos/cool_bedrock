@@ -5,10 +5,7 @@ import 'package:cool_bedrock/src/errors/issue.dart';
 import 'package:fpdart/src/either.dart';
 
 final class UsecaseTestHandlerEntity extends Entity {
-  const UsecaseTestHandlerEntity({
-    required this.throwError,
-    required this.throwLeft,
-  });
+  const new({required this.throwError, required this.throwLeft});
 
   final bool throwError;
   final bool throwLeft;
@@ -17,7 +14,7 @@ final class UsecaseTestHandlerEntity extends Entity {
 }
 
 final class UsecaseTestHandlerParams extends Params {
-  const UsecaseTestHandlerParams({required this.validate});
+  const new({required this.validate});
 
   final bool validate;
 
@@ -29,7 +26,7 @@ final class UsecaseTestHandlerParams extends Params {
 }
 
 sealed class UsecaseTestHandlerFailure extends Failure {
-  const UsecaseTestHandlerFailure();
+  const new();
 
   @override
   List<Object?> get props => [];
@@ -37,24 +34,27 @@ sealed class UsecaseTestHandlerFailure extends Failure {
 
 final class InvalidUsecaseTestHandlerParamsFailure
     extends UsecaseTestHandlerFailure {
-  const InvalidUsecaseTestHandlerParamsFailure();
+  const new();
 }
 
 final class InvalidUsecaseTestHandlerFailure extends UsecaseTestHandlerFailure {
-  const InvalidUsecaseTestHandlerFailure();
+  const new();
 }
 
 final class InvalidUsecaseTransformationFailure
     extends UsecaseTestHandlerFailure {
-  const InvalidUsecaseTransformationFailure();
+  const new();
 }
 
-final class UsecaseTestHandler extends UseCaseHandler<
-    UsecaseTestHandlerEntity,
-    UsecaseTestHandlerParams,
-    UsecaseTestHandlerFailure,
-    UsecaseTestHandlerEntity> {
-  const UsecaseTestHandler({required this.repository});
+final class UsecaseTestHandler
+    extends
+        UseCaseHandler<
+          UsecaseTestHandlerEntity,
+          UsecaseTestHandlerParams,
+          UsecaseTestHandlerFailure,
+          UsecaseTestHandlerEntity
+        > {
+  const new({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerEntity>> Function() repository;
   @override

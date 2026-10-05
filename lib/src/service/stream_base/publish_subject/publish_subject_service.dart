@@ -12,7 +12,7 @@ part of '../../app_service.dart';
 /// {@endtemplate}
 abstract base class PublishSubjectService<T> implements AppService {
   /// {@macro cool_bedrock.publish_subject_service}
-  PublishSubjectService();
+  new();
 
   PublishSubject<T>? _publishSubject;
 

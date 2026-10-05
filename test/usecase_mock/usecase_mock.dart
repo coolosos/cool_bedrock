@@ -7,7 +7,7 @@ final class UsecaseTestEntity extends Entity {
 }
 
 final class UsecaseTestParams extends Params {
-  const UsecaseTestParams({required this.validate, this.giveResult = false});
+  const new({required this.validate, this.giveResult = false});
 
   final bool validate;
 
@@ -21,18 +21,18 @@ final class UsecaseTestParams extends Params {
 }
 
 sealed class UsecaseTestFailure extends Failure {
-  const UsecaseTestFailure();
+  const new();
 
   @override
   List<Object?> get props => [];
 }
 
 final class InvalidUsecaseTestParamsFailure extends UsecaseTestFailure {
-  const InvalidUsecaseTestParamsFailure();
+  const new();
 }
 
 final class InvalidUsecaseTestFailure extends UsecaseTestFailure {
-  const InvalidUsecaseTestFailure();
+  const new();
 }
 
 final class UsecaseTest

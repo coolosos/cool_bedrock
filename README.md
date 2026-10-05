@@ -24,11 +24,13 @@ A bedrock package providing the blueprints and abstract definitions necessary to
 
 ## 🚀 Installation
 
+Requires Dart `>=3.13.0`.
+
 Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  cool_bedrock: ^1.0.0
+  cool_bedrock: ^3.0.0
 ```
 
 Then run:
@@ -50,18 +52,60 @@ import 'package:cool_bedrock/cool_bedrock.dart';
 This example demonstrates how to implement a UseCase, defining its specific Failure and parameter validation:
 
 ```dart
-// 1. Define the specific Failure for this domain
-sealed class FetchUserFailure extends Failure{
-  const FetchUserFailure();
-}
-final class InvalidUserFailure extends FetchUserFailure {
-  const InvalidUserFailure() : super(message: 'Invalid User ID provided.');
-}
-final class InvalidParamsUserFailure extends FetchUserFailure {
-  const InvalidParamsUserFailure() : super(message: 'Invalid parameters provided.');
+// 1. Define the domain types: params, entity and the raw remote model.
+final class FetchUserParams extends Params {
+  const FetchUserParams({required this.userId});
+
+  final String userId;
+
+  // Checked automatically before executing the usecase.
+  @override
+  bool get isValid => userId.isNotEmpty;
+
+  @override
+  List<Object?> get props => [userId];
 }
 
-// 2. Implement the UseCase contract
+final class UserRemote {
+  const UserRemote({this.name});
+
+  final String? name;
+
+  UserEntity toEntity() => UserEntity(name: name ?? 'Unknown');
+}
+
+final class UserEntity extends Entity {
+  const UserEntity({required this.name});
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}
+
+// In this example the repository returns a Future<Either<Failure, UserRemote>>.
+
+// 2. Define the specific Failure for this domain
+sealed class FetchUserFailure extends Failure {
+  const FetchUserFailure({super.message});
+}
+
+final class InvalidUserFailure extends FetchUserFailure {
+  const InvalidUserFailure() : super(message: 'Invalid User ID provided.');
+
+  @override
+  List<Object?> get props => [message];
+}
+
+final class InvalidParamsUserFailure extends FetchUserFailure {
+  const InvalidParamsUserFailure()
+      : super(message: 'Invalid parameters provided.');
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// 3. Implement the UseCase contract
 final class FetchUserUseCase
     extends UseCase<UserEntity, FetchUserParams, FetchUserFailure> {
   const FetchUserUseCase(this.repository);
@@ -74,11 +118,17 @@ final class FetchUserUseCase
 
   @override
   Future<Either<FetchUserFailure, UserEntity>> execute(
-      FetchUserParams params) async {
+    FetchUserParams params,
+  ) async {
     // Core logic goes here. Mappers and Repositories are typically called here.
     try {
-      final user = await repository.fetch(params.userId);
-      return Right(user); // Success
+      final result = await repository.fetch(params.userId);
+      return result.fold(
+        // Map the repository failure to a domain failure
+        (failure) => const Left(InvalidUserFailure()),
+        // Map the remote model to the entity
+        (remote) => Right(remote.toEntity()),
+      ); // Success
     } catch (e) {
       // Map low-level errors to high-level domain failures
       return const Left(InvalidUserFailure()); // Failure
@@ -86,17 +136,15 @@ final class FetchUserUseCase
   }
 }
 
+// 4. Or use the Handler: obtain -> transform -> map errors
 final class FetchUserUseCaseHandle
-    extends
-        UseCaseHandler<
-          UserEntity,
-          AuthParams,
-          FetchUserFailure,
-          RepositoryValue
-        > {
-  const FetchUserUseCaseHandle({
-    required LoginRepository repository,
-  });
+    extends UseCaseHandler<
+      UserEntity,
+      FetchUserParams,
+      FetchUserFailure,
+      UserRemote
+    > {
+  const FetchUserUseCaseHandle({required this.repository});
 
   final UserRepository repository;
 
@@ -104,29 +152,23 @@ final class FetchUserUseCaseHandle
   @override
   FetchUserFailure onInvalidParams() => const InvalidParamsUserFailure();
 
-  //Obtain repository values. Multiple repository can be call.
+  // Obtain repository values. Multiple repositories can be called.
   @override
-  Future<RepositoryValue> obtainValues(
+  FutureOr<UserRemote> obtainValues(
     Resolver<FetchUserFailure> $,
-    AuthParams params,
+    FetchUserParams params,
   ) async {
-    final user = await $(
-      getValue(
-        () => repository.fetch(params.userId),
-      ),
-    );
-    return user;
+    // getValue unwraps a Future<Either<Issue, VALUE>> and maps its errors.
+    return await $(getValue(() => repository.fetch(params.userId)));
   }
 
   @override
-  UserEntity transformation(
-    RepositoryValue values,
-  ) {
-    if(values.name == null || values.name.isEmpty){
+  UserEntity transformation(UserRemote values) {
+    if (values.name == null || values.name!.isEmpty) {
       throw const UsecaseException(InvalidUserFailure());
     }
-    //Can throw exception of any kind and it will be control by [wrapError]
-    return values.toEntity()
+    // It can throw any exception, it will be handled by [wrapError].
+    return values.toEntity();
   }
 
   @override
@@ -134,14 +176,13 @@ final class FetchUserUseCaseHandle
     return const InvalidUserFailure();
   }
 }
-
 ```
 
 ### 2. Execution and Error Handling
 
 ```dart
 // Execution with valid parameters
-final validParams = const FetchUserParams('user_123');
+const validParams = FetchUserParams(userId: 'user_123');
 final validResult = await fetchUserUsecase.call(validParams);
 
 validResult.fold(

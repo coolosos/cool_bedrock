@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print Example view
 
 import 'package:example_cool_bedrock/data/user/user_repository.dart';
 import 'package:example_cool_bedrock/domain/usecase/user_information_usecase.dart';
@@ -20,13 +20,15 @@ Future<void> main(List<String> args) async {
 
   print('\n--- 2. UseCase Creation ---');
   // A. Standard Approach (Programmer manually handles execution)
-  final UserInformationUsecase standardUseCase =
-      FetchUserUseCase(userRepository);
+  final UserInformationUsecase standardUseCase = FetchUserUseCase(
+    userRepository,
+  );
   print('✅ Standard UseCase created.');
 
   // B. Programmatically handled
-  final UserInformationUsecaseHandler handledUseCase =
-      FetchUserUseCaseHandle(repository: userRepository);
+  final UserInformationUsecaseHandler handledUseCase = FetchUserUseCaseHandle(
+    repository: userRepository,
+  );
   print('✅ Handled UseCase created.');
 
   print('\n--- 3. Scenario: Valid User (cool_bedrock) ---');
