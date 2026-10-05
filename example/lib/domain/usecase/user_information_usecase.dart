@@ -20,7 +20,7 @@ export 'package:example_cool_bedrock/domain/entities/user_entity.dart';
 abstract base class UserInformationUsecase
     extends UseCase<UserEntity, AuthParams, FetchUserFailure> {
   /// {@macro example_cool_bedrock.usecase}
-  const UserInformationUsecase();
+  const new();
 }
 
 /// {@template example_cool_bedrock.usecaseHandler}
@@ -45,11 +45,11 @@ abstract base class UserInformationUsecase
 abstract base class UserInformationUsecaseHandler<Remote extends Object>
     extends UseCaseHandler<UserEntity, AuthParams, FetchUserFailure, Remote> {
   /// {@macro example_cool_bedrock.usecaseHandler}
-  const UserInformationUsecaseHandler();
+  const new();
 }
 
 final class AuthParams extends Params {
-  const AuthParams({required this.userId});
+  const new({required this.userId});
 
   final String userId;
 
@@ -57,25 +57,22 @@ final class AuthParams extends Params {
   bool get isValid => userId.isNotEmpty;
 
   @override
-  List<Object?> get props => [
-        userId,
-      ];
+  List<Object?> get props => [userId];
 }
 
 sealed class FetchUserFailure extends Failure {
-  const FetchUserFailure({required super.message});
+  const new({required super.message});
 }
 
 final class InvalidUserFailure extends FetchUserFailure {
-  const InvalidUserFailure() : super(message: 'Invalid User ID provided.');
+  const new() : super(message: 'Invalid User ID provided.');
 
   @override
   List<Object?> get props => [message];
 }
 
 final class InvalidParamsUserFailure extends FetchUserFailure {
-  const InvalidParamsUserFailure()
-      : super(message: 'Invalid parameters provided.');
+  const new() : super(message: 'Invalid parameters provided.');
   @override
   List<Object?> get props => [message];
 }
