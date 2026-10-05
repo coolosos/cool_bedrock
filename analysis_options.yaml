@@ -1,7 +1,1 @@
 include: package:coolint/dart.yaml
-
-analyzer:
-  errors:
-    # Deprecated since Dart 3.13 and contradictory with async_return_with_no_await:
-    # it asks to remove the 'await' that the other rule requires on returned Futures.
-    unnecessary_await_in_return: ignore

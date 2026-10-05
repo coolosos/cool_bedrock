@@ -83,8 +83,8 @@ abstract class UseCase<
     if (params.isNotValid) {
       return Left(onInvalidParams());
     }
-
-    return await execute(params);
+    // ignore: async_return_with_no_await will be wait for TaskEither.Do
+    return execute(params);
   }
 
   /// The core logic execution method.

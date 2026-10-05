@@ -31,7 +31,8 @@ mixin UsecaseFlowManager<
       () async {
         final data = await TaskEither<LEFT, TYPE>.Do(($) async {
           final values = await getValues($);
-          return await $(mapper(() => transform(values), wrapError));
+          // ignore: async_return_with_no_await will be wait for TaskEither.Do
+          return $(mapper(() => transform(values), wrapError));
         }).run();
 
         final result = data.fold(
