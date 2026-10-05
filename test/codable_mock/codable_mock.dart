@@ -32,8 +32,8 @@ final class StringUserMock extends JsonStringCodable<StringUserMock> {
   List<Object?> get props => [name];
 }
 
-/// Same as [StringUserMock] but without an [Encoding], so the deserialization
-/// has to fall back to the plain JSON serializer.
+/// Same as [StringUserMock] but with a null [encoding], the override that used
+/// to select the plain JSON serializer branch of `deserialize`.
 final class NoEncodingUserMock extends JsonStringCodable<NoEncodingUserMock> {
   const new({this.name});
 

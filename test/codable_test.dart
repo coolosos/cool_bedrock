@@ -108,19 +108,15 @@ void main() {
       expect(user.name, equals('Coolosos'));
     });
 
-    test(
-      'should decode non ascii characters from its code units',
-      // Known bug: JsonStringCodable.deserialize pushes the String code units
-      // through the UTF-8 decoder, so any char above U+007F is mangled.
-      skip: 'deserialize corrupts non ascii chars (see codable.dart:133-136)',
-      () {
-        const model = StringUserMock();
+    test('should keep non ascii characters intact', () {
+      const model = StringUserMock();
 
-        final user = model.decode('{"name":"Cayetano Bañón"}');
+      final accented = model.decode('{"name":"Cayetano Bañón"}');
+      final symbols = model.decode('{"name":"Cayetano Bañón ✅ 👨‍👩‍👧"}');
 
-        expect(user.name, equals('Cayetano Bañón'));
-      },
-    );
+      expect(accented.name, equals('Cayetano Bañón'));
+      expect(symbols.name, equals('Cayetano Bañón ✅ 👨‍👩‍👧'));
+    });
 
     test('should return a JSON object as a map', () {
       const model = StringUserMock();
@@ -155,7 +151,7 @@ void main() {
       expect(() => model.deserialize('null'), throwsArgumentError);
     });
 
-    test('should fall back to the serializer when there is no encoding', () {
+    test('should decode normally when a model overrides encoding to null', () {
       const model = NoEncodingUserMock();
 
       expect(model.encoding, isNull);
@@ -166,7 +162,7 @@ void main() {
       expect(model.decode('{"name":"Coolosos"}').name, equals('Coolosos'));
     });
 
-    test('should wrap a JSON array when there is no encoding', () {
+    test('should wrap a JSON array regardless of the encoding', () {
       const model = NoEncodingUserMock();
 
       expect(
@@ -175,6 +171,14 @@ void main() {
           'data': [1, 2],
         }),
       );
+    });
+
+    test('should keep non ascii characters intact with a null encoding', () {
+      const model = NoEncodingUserMock();
+
+      final user = model.decode('{"name":"Cayetano Bañón"}');
+
+      expect(user.name, equals('Cayetano Bañón'));
     });
 
     test('should expose utf8 encoding, JsonCodec and stringify by default', () {
