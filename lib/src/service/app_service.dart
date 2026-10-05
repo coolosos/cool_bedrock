@@ -26,7 +26,7 @@ part 'stream_base/single_replay_subject/single_replay_subject_service.dart';
 /// {@endtemplate}
 abstract interface class AppService {
   /// {@macro cool_bedrock.app_service}
-  const AppService();
+  const new();
 
   /// Initializes and starts the service, setting up necessary resources
   /// and starting background tasks or listeners.

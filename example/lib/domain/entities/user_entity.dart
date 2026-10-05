@@ -1,7 +1,7 @@
 import 'package:cool_bedrock/cool_bedrock.dart';
 
 final class UserEntity extends Entity {
-  const UserEntity({
+  const new({
     required this.name,
     required this.surname,
     required this.birthday,
@@ -12,9 +12,5 @@ final class UserEntity extends Entity {
   final DateTime birthday;
 
   @override
-  List<Object?> get props => [
-        name,
-        surname,
-        birthday,
-      ];
+  List<Object?> get props => [name, surname, birthday];
 }

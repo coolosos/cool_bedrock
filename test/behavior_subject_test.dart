@@ -1,4 +1,4 @@
-// ignore_for_file: cascade_invocations
+// ignore_for_file: cascade_invocations Test visibility
 
 import 'package:test/test.dart';
 
@@ -31,26 +31,28 @@ void main() {
       service.add(10);
       service.add(20);
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(results, containsAll([1, 10, 20]));
       await subscription?.cancel();
     });
 
-    test('should allow restarting after stop() without closing subject',
-        () async {
-      service.start();
-      service.add(100);
+    test(
+      'should allow restarting after stop() without closing subject',
+      () async {
+        service.start();
+        service.add(100);
 
-      service.stop();
-      expect(service.stopCalled, isTrue);
+        service.stop();
+        expect(service.stopCalled, isTrue);
 
-      final nextValue = service.stream?.skip(1).first;
+        final nextValue = service.stream?.skip(1).first;
 
-      service.add(200);
+        service.add(200);
 
-      expect(await nextValue, equals(200));
-    });
+        expect(await nextValue, equals(200));
+      },
+    );
 
     test('should permanently close subject on dispose()', () async {
       service.start();

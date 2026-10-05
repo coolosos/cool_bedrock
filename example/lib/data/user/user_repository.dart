@@ -8,11 +8,11 @@ abstract base class UserRepository {
 }
 
 sealed class UserRepositoryError extends RepositoryError {
-  const UserRepositoryError();
+  const new();
 }
 
 final class NoUserFindError extends UserRepositoryError {
-  const NoUserFindError();
+  const new();
   @override
   List<Object?> get props => [message];
 }

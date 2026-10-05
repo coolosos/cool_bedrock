@@ -12,9 +12,7 @@ part of '../../app_service.dart';
 /// {@endtemplate}
 abstract base class TimerAndBehaviorService<T> implements AppService {
   /// {@macro cool_bedrock.timer_and_behavior_service}
-  TimerAndBehaviorService({required Duration periodicDuration})
-      : _periodicDuration = periodicDuration,
-        super();
+  new({required this._periodicDuration}) : super();
 
   Timer? _timer;
   BehaviorSubject<T>? _behaviorSubject;

@@ -1,3 +1,18 @@
+## 3.0.0
+
+### ⚠️ Breaking changes
+- Minimum Dart SDK is now `>=3.13.0`
+- `equatable` upgraded to `^3.0.0`: `Entity`, `Params`, `Issue` and `Codable` now extend `Equatable` instead of using a mixin, and `Codable.serializer` is now typed as `Codec<dynamic, dynamic>`
+
+### 📦 Dependencies
+- `meta` upgraded to `^1.19.0` and `test` to `^1.32.0`
+
+### 🧹 Internal
+- Analysis options migrated to `package:coolint/dart.yaml` and updated to `coolint` `3.0.0`
+- Constructors migrated to the primary constructor syntax
+- `unnecessary_await_in_return` lint disabled: it is deprecated since Dart 3.13 and contradicts `async_return_with_no_await`
+- Documentation references fixed and the README examples updated to the current API
+
 ## 2.0.0
 ### ⚠️ Breaking changes
 - Change codable naming and field extend

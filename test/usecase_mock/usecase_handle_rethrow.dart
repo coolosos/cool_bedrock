@@ -4,7 +4,7 @@ import 'package:cool_bedrock/src/domain/usecase.dart';
 import 'package:fpdart/src/either.dart';
 
 final class UsecaseTestHandlerRethrowEntity extends Entity {
-  const UsecaseTestHandlerRethrowEntity({required this.throwError});
+  const new({required this.throwError});
 
   final bool throwError;
   @override
@@ -12,7 +12,7 @@ final class UsecaseTestHandlerRethrowEntity extends Entity {
 }
 
 final class UsecaseTestHandlerRethrowParams extends Params {
-  const UsecaseTestHandlerRethrowParams({required this.validate});
+  const new({required this.validate});
 
   final bool validate;
 
@@ -24,7 +24,7 @@ final class UsecaseTestHandlerRethrowParams extends Params {
 }
 
 sealed class UsecaseTestHandlerRethrowFailure extends Failure {
-  const UsecaseTestHandlerRethrowFailure();
+  const new();
 
   @override
   List<Object?> get props => [];
@@ -32,23 +32,26 @@ sealed class UsecaseTestHandlerRethrowFailure extends Failure {
 
 final class InvalidUsecaseTestHandlerRethrowParamsFailure
     extends UsecaseTestHandlerRethrowFailure {
-  const InvalidUsecaseTestHandlerRethrowParamsFailure();
+  const new();
 }
 
 final class InvalidUsecaseTestHandlerRethrowFailure
     extends UsecaseTestHandlerRethrowFailure {
-  const InvalidUsecaseTestHandlerRethrowFailure();
+  const new();
 }
 
-final class UsecaseTestHandlerRethrow extends UseCaseHandler<
-    UsecaseTestHandlerRethrowEntity,
-    UsecaseTestHandlerRethrowParams,
-    UsecaseTestHandlerRethrowFailure,
-    UsecaseTestHandlerRethrowEntity> {
-  const UsecaseTestHandlerRethrow({required this.repository});
+final class UsecaseTestHandlerRethrow
+    extends
+        UseCaseHandler<
+          UsecaseTestHandlerRethrowEntity,
+          UsecaseTestHandlerRethrowParams,
+          UsecaseTestHandlerRethrowFailure,
+          UsecaseTestHandlerRethrowEntity
+        > {
+  const new({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerRethrowEntity>> Function()
-      repository;
+  repository;
   @override
   InvalidUsecaseTestHandlerRethrowParamsFailure onInvalidParams() {
     return const InvalidUsecaseTestHandlerRethrowParamsFailure();
@@ -91,15 +94,18 @@ final class UsecaseTestHandlerRethrow extends UseCaseHandler<
   }
 }
 
-final class UsecaseTestHandlerOnLeft extends UseCaseHandler<
-    UsecaseTestHandlerRethrowEntity,
-    UsecaseTestHandlerRethrowParams,
-    UsecaseTestHandlerRethrowFailure,
-    UsecaseTestHandlerRethrowEntity> {
-  const UsecaseTestHandlerOnLeft({required this.repository});
+final class UsecaseTestHandlerOnLeft
+    extends
+        UseCaseHandler<
+          UsecaseTestHandlerRethrowEntity,
+          UsecaseTestHandlerRethrowParams,
+          UsecaseTestHandlerRethrowFailure,
+          UsecaseTestHandlerRethrowEntity
+        > {
+  const new({required this.repository});
 
   final Future<Either<Failure, UsecaseTestHandlerRethrowEntity>> Function()
-      repository;
+  repository;
   @override
   InvalidUsecaseTestHandlerRethrowParamsFailure onInvalidParams() {
     return const InvalidUsecaseTestHandlerRethrowParamsFailure();

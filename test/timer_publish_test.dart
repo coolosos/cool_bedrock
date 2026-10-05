@@ -1,4 +1,4 @@
-// ignore_for_file: cascade_invocations
+// ignore_for_file: cascade_invocations Test visibility
 
 import 'package:fake_async/fake_async.dart';
 import 'package:test/test.dart';
@@ -29,24 +29,26 @@ void main() {
       });
     });
 
-    test('should stop emitting when stop() is called but keep subject open',
-        () {
-      fakeAsync((async) {
-        final service = MockTimerPublishService(periodicDuration: duration);
-        final results = <String>[];
+    test(
+      'should stop emitting when stop() is called but keep subject open',
+      () {
+        fakeAsync((async) {
+          final service = MockTimerPublishService(periodicDuration: duration);
+          final results = <String>[];
 
-        service.start();
-        service.stream?.listen(results.add);
+          service.start();
+          service.stream?.listen(results.add);
 
-        async.elapse(duration);
-        service.stop();
+          async.elapse(duration);
+          service.stop();
 
-        service.add('Manual Event');
-        async.elapse(duration * 3);
+          service.add('Manual Event');
+          async.elapse(duration * 3);
 
-        expect(results, ['Tick', 'Manual Event']);
-        service.dispose();
-      });
-    });
+          expect(results, ['Tick', 'Manual Event']);
+          service.dispose();
+        });
+      },
+    );
   });
 }

@@ -11,9 +11,9 @@ import 'package:meta/meta.dart';
 /// All concrete parameter classes must be immutable and define validation logic.
 /// {@endtemplate}
 @immutable
-abstract class Params with EquatableMixin {
+abstract class Params with Equatable {
   /// {@macro cool_bedrock.params}
-  const Params();
+  const new();
 
   /// Checks if the parameters contained within this object are valid for
   /// Usecase execution (e.g., non-null, correct format, etc.).
@@ -37,7 +37,7 @@ abstract class Params with EquatableMixin {
 /// {@endtemplate}
 final class NoParams extends Params {
   /// {@macro cool_bedrock.no_params}
-  const NoParams();
+  const new();
 
   /// Always returns true, as there are no parameters to validate.
   @override

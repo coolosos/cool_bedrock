@@ -9,7 +9,7 @@ import 'package:example_cool_bedrock/src/user_information_usecase/user_remote2_e
 final class FetchUserUseCaseHandle
     extends UserInformationUsecaseHandler<UserRemote> {
   /// {@macro example_cool_bedrock.usecaseHandler}
-  const FetchUserUseCaseHandle({required this.repository});
+  const new({required this.repository});
 
   final UserRepository repository;
 
@@ -24,17 +24,13 @@ final class FetchUserUseCaseHandle
     AuthParams params,
   ) async {
     final user = await $(
-      getValue(
-        () => repository.call(userId: params.userId),
-      ),
+      getValue(() => repository.call(userId: params.userId)),
     );
     return user;
   }
 
   @override
-  UserEntity transformation(
-    UserRemote values,
-  ) {
+  UserEntity transformation(UserRemote values) {
     if (values.name == null || (values.name ?? '').isEmpty) {
       throw const UsecaseException(InvalidUserFailure());
     }

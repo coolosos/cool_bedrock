@@ -17,7 +17,7 @@ import 'package:meta/meta.dart';
 @Immutable('Entities must be immutable')
 abstract class Entity extends Equatable {
   /// {@macro cool_bedrock.entity}
-  const Entity();
+  const new();
 
   @override
   List<Object?> get props;
