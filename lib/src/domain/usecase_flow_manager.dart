@@ -28,14 +28,19 @@ mixin UsecaseFlowManager<
     required LEFT Function(Object error, StackTrace stackTrace) wrapError,
   }) {
     return TaskEither<LEFT, TYPE>.tryCatch(
-      () =>
-          TaskEither<LEFT, TYPE>.Do(($) async {
-            final values = await getValues($);
-            return await $(mapper(() => transform(values), wrapError));
-          }).run().then(
-            (data) =>
-                data.fold((l) => throw UsecaseException<LEFT>(l), (r) => r),
-          ),
+      () async {
+        final data = await TaskEither<LEFT, TYPE>.Do(($) async {
+          final values = await getValues($);
+          return await $(mapper(() => transform(values), wrapError));
+        }).run();
+
+        final result = data.fold(
+          (l) => throw UsecaseException<LEFT>(l),
+          (r) => r,
+        );
+
+        return result;
+      },
       (error, s) {
         if (error is UsecaseException<LEFT>) {
           return error.failure;
@@ -58,9 +63,12 @@ mixin UsecaseFlowManager<
     LEFT Function(ISSUE issue)? onLeft,
   }) {
     return TaskEither<LEFT, VALUE>.tryCatch(
-      () => run().then(
-        (result) => result.fold((l) => throw _DataLayerError(l), (r) => r),
-      ),
+      () async {
+        final result = await run();
+        final value = result.fold((l) => throw _DataLayerError(l), (r) => r);
+
+        return value;
+      },
       (error, stack) {
         if (error is _DataLayerError<ISSUE>) {
           if (onLeft != null) {
