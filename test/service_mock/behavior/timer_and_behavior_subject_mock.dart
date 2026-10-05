@@ -1,7 +1,7 @@
 import 'package:cool_bedrock/cool_bedrock.dart';
 
 final class MockTimerService extends TimerAndBehaviorService<int> {
-  MockTimerService({required super.periodicDuration});
+  new({required super.periodicDuration});
 
   int counter = 0;
 

@@ -7,8 +7,12 @@ import 'package:meta/meta.dart';
 
 typedef Resolver<LEFT> = Future<A> Function<A>(TaskEither<LEFT, A>);
 
-mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
-    LEFT extends Failure> on UseCase<TYPE, UsecaseParams, LEFT> {
+mixin UsecaseFlowManager<
+  TYPE extends Entity,
+  UsecaseParams extends Params,
+  LEFT extends Failure
+>
+    on UseCase<TYPE, UsecaseParams, LEFT> {
   /// Handles unexpected errors and maps them to a specific [LEFT] failure.
   LEFT wrapError(Object error, StackTrace stackTrace);
 
@@ -16,7 +20,7 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
   ///
   /// * [getValues]: Retrieves raw data or intermediate values using the [Resolver].
   /// * [transform]: Converts the retrieved data into the domain entity [TYPE].
-  /// * [onError]: Handles unexpected exceptions and converts them to [LEFT].
+  /// * [wrapError]: Handles unexpected exceptions and converts them to [LEFT].
   @protected
   TaskEither<LEFT, TYPE> handler<RECORD>({
     required FutureOr<RECORD> Function(Resolver<LEFT> $) getValues,
@@ -26,18 +30,17 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
     return TaskEither<LEFT, TYPE>.tryCatch(
       () async {
         final data = await TaskEither<LEFT, TYPE>.Do(($) async {
-          final data = await getValues($);
-          return $(
-            mapper(
-              () {
-                return transform(data);
-              },
-              wrapError,
-            ),
-          );
+          final values = await getValues($);
+          // ignore: async_return_with_no_await will be wait for TaskEither.Do
+          return $(mapper(() => transform(values), wrapError));
         }).run();
 
-        return data.fold((l) => throw UsecaseException<LEFT>(l), (r) => r);
+        final result = data.fold(
+          (l) => throw UsecaseException<LEFT>(l),
+          (r) => r,
+        );
+
+        return result;
       },
       (error, s) {
         if (error is UsecaseException<LEFT>) {
@@ -63,7 +66,9 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
     return TaskEither<LEFT, VALUE>.tryCatch(
       () async {
         final result = await run();
-        return result.fold((l) => throw _DataLayerError(l), (r) => r);
+        final value = result.fold((l) => throw _DataLayerError(l), (r) => r);
+
+        return value;
       },
       (error, stack) {
         if (error is _DataLayerError<ISSUE>) {
@@ -88,7 +93,7 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
   ) {
     return TaskEither<LEFT, TYPE>.tryCatch(
       () async {
-        return entitiesMapper();
+        return await entitiesMapper();
       },
       (error, s) {
         if (error is UsecaseException<LEFT>) {
@@ -102,7 +107,7 @@ mixin UsecaseFlowManager<TYPE extends Entity, UsecaseParams extends Params,
 
 /// Internal wrapper for exceptions occurring in the data layer.
 final class _DataLayerError<ISSUE extends Issue> implements Exception {
-  const _DataLayerError(this.issue);
+  const new(this.issue);
 
   final ISSUE issue;
 }

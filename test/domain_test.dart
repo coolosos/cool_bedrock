@@ -24,14 +24,14 @@ void main() {
 }
 
 final class MockEntity extends Entity {
-  const MockEntity();
+  const new();
 
   @override
   List<Object?> get props => [];
 }
 
 final class MockParams extends Params {
-  const MockParams();
+  const new();
   @override
   bool get isValid => true;
 

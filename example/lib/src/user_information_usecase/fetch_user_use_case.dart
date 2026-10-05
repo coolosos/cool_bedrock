@@ -7,7 +7,7 @@ import 'package:example_cool_bedrock/src/user_information_usecase/user_remote2_e
 /// {@macro example_cool_bedrock.usecase}
 final class FetchUserUseCase extends UserInformationUsecase {
   /// {@macro example_cool_bedrock.usecase}
-  const FetchUserUseCase(this.repository);
+  const new(this.repository);
 
   final UserRepository repository;
 
