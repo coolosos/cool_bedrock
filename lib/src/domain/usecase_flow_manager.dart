@@ -20,7 +20,7 @@ mixin UsecaseFlowManager<
   ///
   /// * [getValues]: Retrieves raw data or intermediate values using the [Resolver].
   /// * [transform]: Converts the retrieved data into the domain entity [TYPE].
-  /// * [onError]: Handles unexpected exceptions and converts them to [LEFT].
+  /// * [wrapError]: Handles unexpected exceptions and converts them to [LEFT].
   @protected
   TaskEither<LEFT, TYPE> handler<RECORD>({
     required FutureOr<RECORD> Function(Resolver<LEFT> $) getValues,
@@ -28,18 +28,14 @@ mixin UsecaseFlowManager<
     required LEFT Function(Object error, StackTrace stackTrace) wrapError,
   }) {
     return TaskEither<LEFT, TYPE>.tryCatch(
-      () async {
-        final data = await TaskEither<LEFT, TYPE>.Do(($) async {
-          final data = await getValues($);
-          return $(
-            mapper(() {
-              return transform(data);
-            }, wrapError),
-          );
-        }).run();
-
-        return data.fold((l) => throw UsecaseException<LEFT>(l), (r) => r);
-      },
+      () =>
+          TaskEither<LEFT, TYPE>.Do(($) async {
+            final values = await getValues($);
+            return await $(mapper(() => transform(values), wrapError));
+          }).run().then(
+            (data) =>
+                data.fold((l) => throw UsecaseException<LEFT>(l), (r) => r),
+          ),
       (error, s) {
         if (error is UsecaseException<LEFT>) {
           return error.failure;
@@ -62,10 +58,9 @@ mixin UsecaseFlowManager<
     LEFT Function(ISSUE issue)? onLeft,
   }) {
     return TaskEither<LEFT, VALUE>.tryCatch(
-      () async {
-        final result = await run();
-        return result.fold((l) => throw _DataLayerError(l), (r) => r);
-      },
+      () => run().then(
+        (result) => result.fold((l) => throw _DataLayerError(l), (r) => r),
+      ),
       (error, stack) {
         if (error is _DataLayerError<ISSUE>) {
           if (onLeft != null) {
@@ -89,7 +84,7 @@ mixin UsecaseFlowManager<
   ) {
     return TaskEither<LEFT, TYPE>.tryCatch(
       () async {
-        return entitiesMapper();
+        return await entitiesMapper();
       },
       (error, s) {
         if (error is UsecaseException<LEFT>) {

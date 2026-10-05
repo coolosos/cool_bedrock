@@ -120,7 +120,7 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
   Self decode(String remote) => instanceFromMap(deserialize(remote));
 
   /// Performs the actual byte array to Dart Map deserialization using the
-  /// defined [stringEncoding] and [serializer].
+  /// defined [encoding] and [serializer].
   ///
   /// Handles cases where the JSON array might represent a list of items
   /// (which is wrapped into a 'data' map key).

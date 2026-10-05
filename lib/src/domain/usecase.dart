@@ -51,7 +51,7 @@ sealed class Case<UsecaseParams extends Params> {
 ///   than unhandled exceptions, leading to more stable applications.
 /// - **Clean Architecture Compliant**: Forces a clear separation between the
 ///   caller (UI/Bloc) and the business logic.
-/// - **Built-in Validation**: Automatically checks [params.isNotValid] before
+/// - **Built-in Validation**: Automatically checks [Params.isNotValid] before
 ///   execution, preventing logic errors from bad input.
 ///
 /// ### ❌ Downsides:
@@ -84,7 +84,7 @@ abstract class UseCase<
       return Left(onInvalidParams());
     }
 
-    return execute(params);
+    return await execute(params);
   }
 
   /// The core logic execution method.
