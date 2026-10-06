@@ -73,7 +73,7 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${remote.runtimeType}',
+      'Unsupported type for deserialization: ${result.runtimeType}',
     );
   }
 }
@@ -142,7 +142,7 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${remote.runtimeType}',
+      'Unsupported type for deserialization: ${result.runtimeType}',
     );
   }
 }

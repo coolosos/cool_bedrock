@@ -45,7 +45,7 @@ void main() {
       );
     });
 
-    test('should throw an ArgumentError for a scalar payload', () {
+    test('should throw an ArgumentError naming the decoded payload type', () {
       const model = BytesUserMock();
 
       expect(
@@ -54,7 +54,17 @@ void main() {
           isA<ArgumentError>().having(
             (e) => e.message,
             'message',
-            contains('Unsupported type for deserialization'),
+            'Unsupported type for deserialization: int',
+          ),
+        ),
+      );
+      expect(
+        () => model.deserialize(utf8Bytes('"just a string"')),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            'Unsupported type for deserialization: String',
           ),
         ),
       );
@@ -144,11 +154,29 @@ void main() {
       );
     });
 
-    test('should throw an ArgumentError for a scalar payload', () {
+    test('should throw an ArgumentError naming the decoded payload type', () {
       const model = StringUserMock();
 
-      expect(() => model.deserialize('"just a string"'), throwsArgumentError);
-      expect(() => model.deserialize('null'), throwsArgumentError);
+      expect(
+        () => model.deserialize('"just a string"'),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            'Unsupported type for deserialization: String',
+          ),
+        ),
+      );
+      expect(
+        () => model.deserialize('null'),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            'Unsupported type for deserialization: Null',
+          ),
+        ),
+      );
     });
 
     test('should decode normally when a model overrides encoding to null', () {
