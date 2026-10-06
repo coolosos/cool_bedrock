@@ -69,6 +69,26 @@ void main() {
         ),
       );
       expect(
+        () => model.deserialize(utf8Bytes('true')),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            'Unsupported type for deserialization: bool',
+          ),
+        ),
+      );
+      expect(
+        () => model.deserialize(utf8Bytes('1.5')),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            'Unsupported type for deserialization: double',
+          ),
+        ),
+      );
+      expect(
         () => model.decode(utf8Bytes('"just a string"')),
         throwsArgumentError,
       );
@@ -173,7 +193,7 @@ void main() {
           isA<ArgumentError>().having(
             (e) => e.message,
             'message',
-            'Unsupported type for deserialization: Null',
+            'Unsupported type for deserialization: null',
           ),
         ),
       );

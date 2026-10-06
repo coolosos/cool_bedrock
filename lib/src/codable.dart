@@ -73,7 +73,7 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${result.runtimeType}',
+      'Unsupported type for deserialization: ${_jsonKind(result)}',
     );
   }
 }
@@ -142,7 +142,26 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${result.runtimeType}',
+      'Unsupported type for deserialization: ${_jsonKind(result)}',
     );
   }
 }
+
+/// The kind of a decoded JSON value, as a stable, human-readable name.
+///
+/// `dart:convert` only ever produces `null`, `bool`, `num`, `String`, `List`
+/// or `Map<String, dynamic>`. The containers are returned before this helper
+/// is reached, so through the paired classes only the four JSON scalars occur;
+/// the last case is a defensive guard (the serializer is a final [JsonCodec]).
+///
+/// The name is derived with type patterns instead of `runtimeType`, whose
+/// string form is not contractually stable: obfuscated and minified release
+/// builds rename user-defined types (see the `avoid_type_to_string` lint).
+String _jsonKind(Object? value) => switch (value) {
+  null => 'null',
+  bool() => 'bool',
+  int() => 'int',
+  double() => 'double',
+  String() => 'String',
+  _ => 'unsupported value',
+};

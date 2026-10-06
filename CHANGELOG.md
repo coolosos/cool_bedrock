@@ -7,7 +7,7 @@
 ### 🐛 Bug fixes
 - `JsonStringCodable.deserialize` now parses the incoming `String` directly instead of pushing its UTF-16 code units through the UTF-8 decoder: every character above `U+007F` was corrupted or made the payload fail with a `FormatException`
 - `Codable.encoding` is informative for `String` payloads (the transport already decoded them); only `JsonBytesCodable` uses it to decode bytes
-- The `ArgumentError` raised by `JsonBytesCodable.deserialize` and `JsonStringCodable.deserialize` now names the decoded payload type instead of the input container, which always reported `String` or `Uint8List`
+- The `ArgumentError` raised by `JsonBytesCodable.deserialize` and `JsonStringCodable.deserialize` now names the decoded payload type instead of the input container (which always reported `String` or `Uint8List`), and derives that name with type patterns instead of `runtimeType` because type names are not contractually stable in obfuscated or minified release builds
 
 ### 📦 Dependencies
 - `meta` upgraded to `^1.19.0` and `test` to `^1.32.0`
