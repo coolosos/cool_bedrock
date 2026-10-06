@@ -25,7 +25,8 @@ abstract class Codable<T, Self extends Codable<T, Self>> with Equatable {
   /// The specific string encoding (e.g., 'utf-8') required for the remote data.
   ///
   /// Concrete implementations must provide the encoding used to interpret
-  /// the remote data if applicable (e.g., when T is `String` or `Uint8List`).
+  /// the remote data if applicable (e.g., when T is `Uint8List`). It is not
+  /// used when T is a `String`, because a Dart [String] is already decoded.
   Encoding? get encoding;
 
   /// The JSON codec (serializer) used to transform between raw JSON strings/bytes
@@ -72,29 +73,30 @@ abstract class JsonBytesCodable<Self extends Codable<Uint8List, Self>>
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${remote.runtimeType}',
+      'Unsupported type for deserialization: ${_jsonKind(result)}',
     );
   }
 }
 
-/// {@template cool_bedrock.json_bytes_codable}
-/// A specialized abstract contract for decoding data models from a raw
-/// byte array ([Uint8List]) that contains UTF-8 encoded JSON.
+/// {@template cool_bedrock.json_string_codable}
+/// A specialized abstract contract for decoding data models from a raw JSON
+/// [String], typically the body of an HTTP response.
 ///
-/// This class handles the essential steps for byte-to-model conversion:
-/// 1. **Decoding Bytes:** Converts [Uint8List] to a raw JSON string using UTF-8.
-/// 2. **Parsing JSON:** Converts the JSON string into a Dart [Map<String, dynamic>].
-/// 3. **Model Mapping:** Delegates the final map-to-model conversion to [instanceFromMap].
+/// This class handles the essential steps for string-to-model conversion:
+/// 1. **Parsing JSON:** Parses the [String] into a [Map<String, dynamic>].
+/// 2. **Model Mapping:** Delegates the map-to-model conversion to
+/// [instanceFromMap].
 /// {@endtemplate}
 @immutable
 abstract class JsonStringCodable<Self extends Codable<String, Self>>
     extends Codable<String, Self> {
-  /// {@macro cool_bedrock.json_bytes_codable}
+  /// {@macro cool_bedrock.json_string_codable}
   const new();
 
-  /// Specifies the required string encoding for decoding the byte array.
+  /// Specifies the encoding used by the transport to decode the body.
   ///
-  /// Fixed to **UTF-8** with permissive handling for malformed bytes.
+  /// Fixed to **UTF-8**. The [String] handed to [deserialize] is already
+  /// decoded by the transport, so this getter is informative only.
   @override
   Encoding? get encoding => const Utf8Codec(allowMalformed: true);
 
@@ -112,38 +114,54 @@ abstract class JsonStringCodable<Self extends Codable<String, Self>>
   @protected
   Self instanceFromMap(Map<String, dynamic> data);
 
-  /// Decodes the raw byte array [remote] into the concrete model instance [Self].
+  /// Decodes the raw JSON [remote] into the concrete model instance [Self].
   ///
-  /// This method orchestrates the byte-to-map conversion via [deserialize]
+  /// This method orchestrates the string-to-map conversion via [deserialize]
   /// and the map-to-instance conversion via [instanceFromMap].
   @override
   Self decode(String remote) => instanceFromMap(deserialize(remote));
 
-  /// Performs the actual byte array to Dart Map deserialization using the
-  /// defined [encoding] and [serializer].
+  /// Performs the actual JSON string to Dart Map deserialization using the
+  /// defined [serializer].
+  ///
+  /// The [remote] string is parsed directly. Re-encoding it through [encoding]
+  /// would only add work, and feeding its UTF-16 code units to a UTF-8 decoder
+  /// corrupts every character above `U+007F`.
   ///
   /// Handles cases where the JSON array might represent a list of items
   /// (which is wrapped into a 'data' map key).
   ///
   /// - Parameters:
-  ///   - remote: The raw [Uint8List] containing the JSON data.
+  ///   - remote: The raw [String] containing the JSON data.
   /// - Returns: The deserialized [Map<String, dynamic>].
   Map<String, dynamic> deserialize(String remote) {
-    final Object? result;
-    if (encoding case final stringEncoding?) {
-      result = stringEncoding.decoder
-          .fuse(serializer.decoder)
-          .convert(remote.codeUnits);
-    } else {
-      result = serializer.decode(remote);
-    }
+    final Object? result = serializer.decode(remote);
     if (result is Map<String, dynamic>) {
       return result;
     } else if (result is List<dynamic>) {
       return {'data': result};
     }
     throw ArgumentError(
-      'Unsupported type for deserialization: ${remote.runtimeType}',
+      'Unsupported type for deserialization: ${_jsonKind(result)}',
     );
   }
 }
+
+/// The kind of a decoded JSON value, as a stable, human-readable name.
+///
+/// `dart:convert` only ever produces `null`, `bool`, `num`, `String`, `List`
+/// or `Map<String, dynamic>`. The containers are returned before this helper
+/// is reached, so through the paired classes only the four JSON scalars occur;
+/// the last case is a defensive guard (the serializer is a final [JsonCodec]).
+///
+/// The name is derived with type patterns instead of `runtimeType`, whose
+/// string form is not contractually stable: obfuscated and minified release
+/// builds rename user-defined types (see the `avoid_type_to_string` lint).
+String _jsonKind(Object? value) => switch (value) {
+  null => 'null',
+  bool() => 'bool',
+  int() => 'int',
+  double() => 'double',
+  String() => 'String',
+  _ => 'unsupported value',
+};
